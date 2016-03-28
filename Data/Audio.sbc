@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<Definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Sounds>
+
+    <Sound>
+      <Id>
+        <TypeId>MyObjectBuilder_AudioDefinition</TypeId>
+        <SubtypeId>ArcPlayerLCDStart</SubtypeId>
+      </Id>
+      <Category>PLAYER</Category>
+      <MaxDistance>40</MaxDistance>
+      <Volume>1</Volume>
+      <VolumeVariation>0.7</VolumeVariation>
+      <PitchVariation>72</PitchVariation>
+      <Waves>
+        <Wave Type="D3">
+          <Start>ARC\PLAYER\ArcPlayIronSightStart3d01.wav</Start>
+        </Wave>
+        <Wave Type="D2">
+          <Start>ARC\PLAYER\ArcPlayIronSightStart2d01.wav</Start>
+        </Wave>
+      </Waves>
+    </Sound>
+
+    <Sound>
+      <Id>
+        <TypeId>MyObjectBuilder_AudioDefinition</TypeId>
+        <SubtypeId>ArcPlayerLCDEnd</SubtypeId>
+      </Id>
+      <Category>PLAYER</Category>
+      <MaxDistance>40</MaxDistance>
+      <Volume>1</Volume>
+      <VolumeVariation>0.7</VolumeVariation>
+      <PitchVariation>72</PitchVariation>
+      <Waves>
+        <Wave Type="D3">
+          <Start>ARC\PLAYER\ArcPlayIronSightEnd3d01.wav</Start>
+        </Wave>
+        <Wave Type="D2">
+          <Start>ARC\PLAYER\ArcPlayIronSightEnd2d01.wav</Start>
+        </Wave>
+      </Waves>
+    </Sound>
+
+    <Sound>
+      <Id>
+        <TypeId>MyObjectBuilder_AudioDefinition</TypeId>
+        <SubtypeId>ArcPlayerLCDClick</SubtypeId>
+      </Id>
+      <Category>PLAYER</Category>
+      <MaxDistance>50</MaxDistance>
+      <Volume>1</Volume>
+      <VolumeVariation>1.5</VolumeVariation>
+      <PitchVariation>32</PitchVariation>
+      <Waves>
+        <Wave Type="D3">
+          <Start>Audio\Click.xwm</Start>
+        </Wave>
+      </Waves>
+    </Sound>
+
+    <Sound>
+      <Id>
+        <TypeId>MyObjectBuilder_AudioDefinition</TypeId>
+        <SubtypeId>ArcPlayerLCDType</SubtypeId>
+      </Id>
+      <Category>PLAYER</Category>
+      <MaxDistance>50</MaxDistance>
+      <Volume>0.5</Volume>
+      <VolumeVariation>0</VolumeVariation>
+      <PitchVariation>100</PitchVariation>
+      <Waves>
+        <Wave Type="D3">
+          <Start>Audio\Type.xwm</Start>
+        </Wave>
+      </Waves>
+    </Sound>
+
+    <Sound>
+      <Id>
+        <TypeId>MyObjectBuilder_AudioDefinition</TypeId>
+        <SubtypeId>ArcPlayerLCDTab</SubtypeId>
+      </Id>
+      <Category>PLAYER</Category>
+      <MaxDistance>50</MaxDistance>
+      <Volume>0.5</Volume>
+      <VolumeVariation>0</VolumeVariation>
+      <PitchVariation>200</PitchVariation>
+      <Waves>
+        <Wave Type="D3">
+          <Start>Audio\Tab.xwm</Start>
+        </Wave>
+      </Waves>
+    </Sound>
+
+  </Sounds>
+</Definitions>

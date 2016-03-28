@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Animations>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionStart</SubtypeId>
+      </Id>
+      <DisplayName>InteractionStart</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionStart.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionStartTarget</SubtypeId>
+      </Id>
+      <DisplayName>InteractionStartTarget</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionStartTarget.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionEnd</SubtypeId>
+      </Id>
+      <DisplayName>InteractionEnd</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionEnd.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionEndTarget</SubtypeId>
+      </Id>
+      <DisplayName>InteractionEndTarget</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionEndTarget.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionClick</SubtypeId>
+      </Id>
+      <DisplayName>InteractionClick</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionClick.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionType</SubtypeId>
+      </Id>
+      <DisplayName>InteractionType</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionType.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionTab</SubtypeId>
+      </Id>
+      <DisplayName>InteractionTab</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionTab.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionRCOn</SubtypeId>
+      </Id>
+      <DisplayName>InteractionRCOn</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionRCOn.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionRCOff</SubtypeId>
+      </Id>
+      <DisplayName>InteractionRCOff</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionRCOff.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionCameraOn</SubtypeId>
+      </Id>
+      <DisplayName>InteractionCameraOn</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionCameraOn.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionCameraOff</SubtypeId>
+      </Id>
+      <DisplayName>InteractionCameraOff</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionCameraOff.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand RightHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionUseButton</SubtypeId>
+      </Id>
+      <DisplayName>InteractionUseButton</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionUseButton.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>InteractionUseButtonOff</SubtypeId>
+      </Id>
+      <DisplayName>InteractionUseButtonOff</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionUseButtonOff.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+  </Animations>
+</Definitions>
