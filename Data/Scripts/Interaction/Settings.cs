@@ -33,6 +33,7 @@ namespace Digi.Interaction
         public double cableWidth = 0.01;
         public int cableModel = 3;
         public int cableResolution = 30;
+        public float interactionSounds = 0.3f;
         
         private static char[] CHARS = new char[] { '=' };
         
@@ -77,6 +78,7 @@ namespace Digi.Interaction
                 string[] args;
                 int i;
                 bool b;
+                float f;
                 double d;
                 
                 while((line = file.ReadLine()) != null)
@@ -129,6 +131,12 @@ namespace Digi.Interaction
                             else
                                 Log.Error("Invalid "+args[0]+" value: " + args[1]);
                             continue;
+                        case "interactionsounds":
+                            if(float.TryParse(args[1], out f))
+                                interactionSounds = (float)Math.Round(MathHelper.Clamp(f, 0, 1), 5);
+                            else
+                                Log.Error("Invalid "+args[0]+" value: " + args[1]);
+                            continue;
                     }
                 }
                 
@@ -171,6 +179,7 @@ namespace Digi.Interaction
             str.Append("CableWidth=").Append(cableWidth).AppendLine(comments ? " // Cable width in metres. Values from 0.00001 to 1, default: 0.01" : "");
             str.Append("CableModel=").Append(cableModel).AppendLine(comments ? " // Cable type, 0 = sprite, 1 to 3 is a model and controls the quality of the mesh. default: 3" : "");
             str.Append("CableResolution=").Append(cableResolution).AppendLine(comments ? " // Interaction cable smoothness. Values from 5 to 100, default: 30" : "");
+            str.Append("InteractionSounds=").Append(interactionSounds.ToString("0.#####")).AppendLine(comments ? " // Sounds coming from other players interacting. They're already scaled to your game volume, this stacks on top of that. Values from 0 (turned off) to 1, default: 0.3" : "");
             
             return str.ToString();
         }

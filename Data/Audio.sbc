@@ -10,7 +10,7 @@
       <Category>PLAYER</Category>
       <MaxDistance>40</MaxDistance>
       <Volume>1</Volume>
-      <VolumeVariation>0.7</VolumeVariation>
+      <VolumeVariation>0</VolumeVariation>
       <PitchVariation>72</PitchVariation>
       <Waves>
         <Wave Type="D3">
@@ -30,7 +30,7 @@
       <Category>PLAYER</Category>
       <MaxDistance>40</MaxDistance>
       <Volume>1</Volume>
-      <VolumeVariation>0.7</VolumeVariation>
+      <VolumeVariation>0</VolumeVariation>
       <PitchVariation>72</PitchVariation>
       <Waves>
         <Wave Type="D3">
@@ -49,8 +49,8 @@
       </Id>
       <Category>PLAYER</Category>
       <MaxDistance>50</MaxDistance>
-      <Volume>1</Volume>
-      <VolumeVariation>1.5</VolumeVariation>
+      <Volume>0.5</Volume>
+      <VolumeVariation>0</VolumeVariation>
       <PitchVariation>32</PitchVariation>
       <Waves>
         <Wave Type="D3">

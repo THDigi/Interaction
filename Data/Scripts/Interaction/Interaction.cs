@@ -565,7 +565,7 @@ namespace Digi.Interaction
             
             string sound = interactionEffect[type].sound;
             
-            if(sound != null)
+            if(sound != null && settings.interactionSounds > 0)
                 PlaySound(ent, sound);
         }
         
@@ -1217,9 +1217,10 @@ namespace Digi.Interaction
             return true;
         }
         
-        public void PlaySound(IMyEntity ent, string name, float? volume = null)
+        public void PlaySound(IMyEntity ent, string name)
         {
             var emitter = new MyEntity3DSoundEmitter(ent as MyEntity);
+            emitter.CustomVolume = settings.interactionSounds;
             emitter.PlaySingleSound(new MySoundPair(name));
         }
         
