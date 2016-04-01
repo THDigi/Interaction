@@ -884,6 +884,14 @@ namespace Digi.Interaction
                                                               if(!planets.ContainsKey(e.EntityId))
                                                                   planets.Add(e.EntityId, e as MyPlanet);
                                                           }
+                                                          else if(e is IMyCharacter)
+                                                          {
+                                                              var character = e as IMyCharacter;
+                                                              var skinned = e as MySkinnedEntity;
+                                                              
+                                                              if(character.IsPlayer && skinned != null && skinned.UseNewAnimationSystem)
+                                                                  skinned.UseNewAnimationSystem = false;
+                                                          }
                                                           
                                                           return false; // no reason to add to the list
                                                       });
