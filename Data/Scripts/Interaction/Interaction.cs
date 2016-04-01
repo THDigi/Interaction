@@ -75,6 +75,18 @@ namespace Digi.Interaction
             
             public void PlayAnimation(MySkinnedEntity skinned, bool forceStayOnLastFrame = false)
             {
+                /*
+                if(skinned.UseNewAnimationSystem)
+                {
+                    MyAPIGateway.Utilities.ShowNotification("anim triggered", 3000, MyFontEnum.Red); // TODO REMOVE
+                    
+                    // TODO ...
+                    //skinned.AnimationController.TriggerAction(MyStringId.GetOrCompute("SMRightHand".ToLower()));
+                    //skinned.AnimationController.TriggerAction(MyStringId.GetOrCompute("Wave".ToLower()));
+                    return;
+                }
+                 */
+                
                 animCmd.AnimationSubtypeName = animation;
                 animCmd.TimeScale = timeScale;
                 animCmd.FrameOption = (forceStayOnLastFrame ? MyFrameOption.StayOnLastFrame : frameOption);
@@ -384,6 +396,31 @@ namespace Digi.Interaction
         {
             try
             {
+                // TODO testing/remove
+                /*
+                {
+                    if(characterEntity == null)
+                    {
+                        MyAPIGateway.Utilities.ShowMessage("", "no char ent!");
+                        return;
+                    }
+                    
+                    (characterEntity as MySkinnedEntity).UseNewAnimationSystem = false;
+                    
+                    send = false;
+                    var args = msg.Split(' ');
+                    
+                    foreach(var arg in args)
+                    {
+                        (characterEntity as MySkinnedEntity).AnimationController.TriggerAction(MyStringId.GetOrCompute(arg));
+                    }
+                    
+                    MyAPIGateway.Utilities.ShowMessage("", "'"+String.Join("+", args)+"' executed!");
+                }
+                
+                return;
+                 */
+                
                 if(msg.StartsWith("/interaction", StringComparison.InvariantCultureIgnoreCase))
                 {
                     send = false;
@@ -641,9 +678,13 @@ namespace Digi.Interaction
                 var fingerBoneMatrix = charEnt.BoneAbsoluteTransforms[fingerBone];
                 targetPos = charEnt.WorldMatrix.Translation + Vector3.TransformNormal(fingerBoneMatrix.Translation, charEnt.WorldMatrix);
             }
-            else if(interacted.offset.HasValue)
+            else
             {
-                targetPos += Vector3.TransformNormal(interacted.offset.Value, targetEnt.WorldMatrix);
+                if(interacted.offset.HasValue)
+                    targetPos += Vector3.TransformNormal(interacted.offset.Value, targetEnt.WorldMatrix);
+                
+                if(targetEnt is MyCubeBlock)
+                    targetPos -= Vector3.TransformNormal((targetEnt as MyCubeBlock).BlockDefinition.ModelOffset, targetEnt.WorldMatrix);
             }
             
             int lcdBone;
@@ -902,6 +943,9 @@ namespace Digi.Interaction
                     var skinned = (characterEntity as MySkinnedEntity);
                     var intEnt = (MyAPIGateway.Session.ControlledObject is IMyCharacter ? MyGuiScreenTerminal.InteractedEntity as IMyCubeBlock : null);
                     bool inMenu = MyGuiScreenGamePlay.ActiveGameplayScreen != null;
+                    
+                    if(skinned.UseNewAnimationSystem) // disable the new animation system until they actually explain it xD
+                        skinned.UseNewAnimationSystem = false;
                     
                     if(!inMenu && !(controlled is MyRemoteControl))
                     {
