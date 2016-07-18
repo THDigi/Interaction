@@ -1,0 +1,473 @@
+<?xml version="1.0"?>
+<Definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Definition xsi:type="AnimationControllerDefinition">
+    <Id Type="MyObjectBuilder_AnimationControllerDefinition" Subtype="Default_Astronaut" />
+    <Layers>
+      <Layer>
+        <Name>InteractMod_Layer</Name>
+        <Mode>Replace</Mode>
+        <StateMachine>InteractMod_SM</StateMachine>
+        <InitialSMNode>Nothing</InitialSMNode>
+        <BoneMask>SE_RigHead SE_RigL_Index_1 SE_RigL_Index_2 SE_RigL_Index_3 SE_RigL_Index_3_end SE_RigL_Little_1 SE_RigL_Little_2 SE_RigL_Little_3 SE_RigL_Little_3_end SE_RigL_Middle_1 SE_RigL_Middle_2 SE_RigL_Middle_3 SE_RigL_Middle_3_end SE_RigL_Ring_1 SE_RigL_Ring_2 SE_RigL_Ring_3 SE_RigL_Ring_3_end SE_RigL_Thumb_1 SE_RigL_Thumb_2 SE_RigL_Thumb_3 SE_RigL_Thumb_3_end SE_RigL_Weapon_pin SE_RigL_Weapon_pin_end SE_RigLForearm1 SE_RigLForearm2 SE_RigLForearm3 SE_RigLPalm SE_RigLUpperarm SE_RigNeck SE_RigR_Index_1 SE_RigR_Index_2 SE_RigR_Index_3 SE_RigR_Index_3_end SE_RigR_Little_1 SE_RigR_Little_2 SE_RigR_Little_3 SE_RigR_Little_3_end SE_RigR_Middle_1 SE_RigR_Middle_2 SE_RigR_Middle_3 SE_RigR_Middle_3_end SE_RigR_Ring_1 SE_RigR_Ring_2 SE_RigR_Ring_3 SE_RigR_Ring_3_end SE_RigR_Thumb_1 SE_RigR_Thumb_2 SE_RigR_Thumb_3 SE_RigR_Thumb_3_end SE_RigR_Weapon_pin SE_RigR_Weapon_pin_end SE_RigRForearm1 SE_RigRForearm2 SE_RigRForearm3 SE_RigRibcage SE_RigRibcageBone001 SE_RigRibcageBone001_end SE_RigRPalm SE_RigRUpperarm SE_RigSpine1 SE_RigSpine2 SE_RigSpine3 SE_RigSpine4</BoneMask>
+      </Layer>
+    </Layers>
+    <StateMachines>
+      <StateMachine>
+        <Name>InteractMod_SM</Name>
+        <Nodes>
+          <Node>
+            <Name>Nothing</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>-198</X>
+                <Y>-42</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>38</X>
+                  <Y>-43</Y>
+                </EdPos>
+                <Loop>true</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-761</X>
+              <Y>-403</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>Start</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>-232</X>
+                <Y>-47</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>-26</X>
+                  <Y>-46</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionStart.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-658</X>
+              <Y>-201</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>StartTarget</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>-159</X>
+                <Y>-10</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>80</X>
+                  <Y>-10</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionStartTarget.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-637</X>
+              <Y>-264</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>EndTarget</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>216</X>
+                  <Y>0</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionEndTarget.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-626</X>
+              <Y>-388</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>State1</Name>
+            <EdPos>
+              <X>-355</X>
+              <Y>-334</Y>
+            </EdPos>
+            <Type>Any</Type>
+          </Node>
+          <Node>
+            <Name>Click</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>201</X>
+                  <Y>4</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionClick.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-114</X>
+              <Y>-418</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>End</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>178</X>
+                  <Y>-1</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionEnd.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-651</X>
+              <Y>-326</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>Type</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>176</X>
+                  <Y>-2</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionType.mwm</PathToModel>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-113</X>
+              <Y>-363</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>Tab</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>173</X>
+                  <Y>1</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionTab.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-115</X>
+              <Y>-307</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>Use</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>-48</X>
+                <Y>7</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>136</X>
+                  <Y>9</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionUseButton.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-639</X>
+              <Y>-137</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>UseOn</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>182</X>
+                  <Y>-1</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionUseButton.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-630</X>
+              <Y>-74</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>UseOff</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>180</X>
+                  <Y>0</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionUseButtonOff.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-633</X>
+              <Y>-10</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>RconOn</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>204</X>
+                  <Y>2</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionRCOn.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-115</X>
+              <Y>-246</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>RconOff</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>188</X>
+                  <Y>-1</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionRCOff.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-116</X>
+              <Y>-188</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>CameraOn</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>205</X>
+                  <Y>0</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionCameraOn.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-115</X>
+              <Y>-127</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+          <Node>
+            <Name>CameraOff</Name>
+            <AnimationTree>
+              <EdPos>
+                <X>0</X>
+                <Y>0</Y>
+              </EdPos>
+              <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
+                <EdPos>
+                  <X>208</X>
+                  <Y>1</Y>
+                </EdPos>
+                <PathToModel>Models\Animations\InteractionCameraOff.mwm</PathToModel>
+                <AnimationName>AnimStack::Scene</AnimationName>
+                <Loop>false</Loop>
+                <Speed>1</Speed>
+                <Interpolate>true</Interpolate>
+              </Child>
+            </AnimationTree>
+            <EdPos>
+              <X>-119</X>
+              <Y>-66</Y>
+            </EdPos>
+            <Type>Normal</Type>
+          </Node>
+        </Nodes>
+        <Transitions>
+          <Transition From="EndTarget" To="Nothing" TimeInSec="0.3" Sync="Restart">
+            <Conditions>
+              <Conjunction>
+                <Condition Lhs="@animationfinished" Op="GreaterOrEqual" Rhs="1" />
+              </Conjunction>
+            </Conditions>
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionStartTarget" From="State1" To="StartTarget" TimeInSec="0.2" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionStart" From="State1" To="Start" TimeInSec="0.2" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionEndTarget" From="State1" To="EndTarget" TimeInSec="0.1" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionEnd" From="State1" To="End" TimeInSec="0.1" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition From="End" To="Nothing" TimeInSec="0.3" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionClick" From="State1" To="Click" TimeInSec="0.1" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionType" From="State1" To="Type" TimeInSec="0.1" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionTab" From="State1" To="Tab" TimeInSec="0.1" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionUseButton" From="State1" To="Use" TimeInSec="0.2" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionUseButtonOff" From="State1" To="UseOff" TimeInSec="0.2" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition From="Use" To="Nothing" TimeInSec="0.3" Sync="Restart">
+            <Conditions>
+              <Conjunction>
+                <Condition Lhs="@animationfinished" Op="GreaterOrEqual" Rhs="1" />
+              </Conjunction>
+            </Conditions>
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition From="UseOff" To="Nothing" TimeInSec="0.3" Sync="Restart">
+            <Conditions>
+              <Conjunction>
+                <Condition Lhs="@animationfinished" Op="GreaterOrEqual" Rhs="1" />
+              </Conjunction>
+            </Conditions>
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionRCOff" From="State1" To="RconOff" TimeInSec="0.1" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionUseButtonOn" From="State1" To="UseOn" TimeInSec="0.2" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionCameraOn" From="State1" To="CameraOn" TimeInSec="0.1" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionCameraOff" From="State1" To="CameraOff" TimeInSec="0.1" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+          <Transition Name="InteractionRCOn" From="State1" To="RconOn" TimeInSec="0.1" Sync="Restart">
+            <Priority xsi:nil="true" />
+          </Transition>
+        </Transitions>
+      </StateMachine>
+    </StateMachines>
+  </Definition>
+</Definitions>

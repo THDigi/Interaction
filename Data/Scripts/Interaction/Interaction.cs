@@ -1,36 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using Sandbox.Common;
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.Definitions;
-using Sandbox.Engine;
-using Sandbox.Engine.Physics;
-using Sandbox.Engine.Multiplayer;
-using Sandbox.Graphics.GUI;
 using Sandbox.ModAPI;
-using Sandbox.ModAPI.Interfaces;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
 using Sandbox.Game.Gui;
-using SpaceEngineers.Game.ModAPI.Ingame;
-using VRage.Common.Utils;
+using SpaceEngineers.Game.ModAPI;
 using VRage.Game;
 using VRage.Game.Entity;
-using VRage.Game.Gui;
 using VRage.Game.ModAPI;
 using VRage.Game.ModAPI.Interfaces;
 using VRage.Input;
 using VRageMath;
-using VRage;
 using VRage.ObjectBuilders;
 using VRage.Game.Components;
 using VRage.ModAPI;
-using VRage.Utils;
 using Digi.Utils;
 
 namespace Digi.Interaction
@@ -75,22 +61,18 @@ namespace Digi.Interaction
             
             public void PlayAnimation(MySkinnedEntity skinned, bool forceStayOnLastFrame = false)
             {
-                /*
                 if(skinned.UseNewAnimationSystem)
                 {
-                    MyAPIGateway.Utilities.ShowNotification("anim triggered", 3000, MyFontEnum.Red); // TODO REMOVE
-                    
-                    // TODO ...
-                    //skinned.AnimationController.TriggerAction(MyStringId.GetOrCompute("SMRightHand".ToLower()));
-                    //skinned.AnimationController.TriggerAction(MyStringId.GetOrCompute("Wave".ToLower()));
-                    return;
+                    var character = skinned as IMyCharacter;
+                    character.TriggerCharacterAnimationEvent(animation, true);
                 }
-                 */
-                
-                animCmd.AnimationSubtypeName = animation;
-                animCmd.TimeScale = timeScale;
-                animCmd.FrameOption = (forceStayOnLastFrame ? MyFrameOption.StayOnLastFrame : frameOption);
-                skinned.AddCommand(animCmd, true);
+                else
+                {
+                    animCmd.AnimationSubtypeName = animation;
+                    animCmd.TimeScale = timeScale;
+                    animCmd.FrameOption = (forceStayOnLastFrame ? MyFrameOption.StayOnLastFrame : frameOption);
+                    skinned.AddCommand(animCmd, true);
+                }
             }
         }
         
@@ -144,7 +126,6 @@ namespace Digi.Interaction
         public static InteractionMod instance = null;
         
         public bool init = false;
-        public bool isThisHost = false;
         public bool isThisHostDedicated = false;
         
         public Settings settings = null;
@@ -201,16 +182,15 @@ namespace Digi.Interaction
         {
             {InteractionType.START, new InteractionEffect()
                 {
-                    animation = "InteractionStart",
+                    animation = "interactionstart",
                     sound = "PlayerLCDStart",
                     delayTicks = TimeSpan.TicksPerMillisecond * 400,
-                    //timeScale = 2.5f,
                 }
             },
             
             {InteractionType.START_TARGET, new InteractionEffect()
                 {
-                    animation = "InteractionStartTarget",
+                    animation = "interactionstarttarget",
                     sound = "PlayerLCDStart",
                     delayTicks = TimeSpan.TicksPerMillisecond * 1200,
                 }
@@ -218,7 +198,7 @@ namespace Digi.Interaction
             
             {InteractionType.END, new InteractionEffect()
                 {
-                    animation = "InteractionEnd",
+                    animation = "interactionend",
                     sound = "PlayerLCDEnd",
                     frameOption = MyFrameOption.PlayOnce,
                 }
@@ -226,7 +206,7 @@ namespace Digi.Interaction
             
             {InteractionType.END_TARGET, new InteractionEffect()
                 {
-                    animation = "InteractionEndTarget",
+                    animation = "interactionendtarget",
                     sound = "PlayerLCDEnd",
                     frameOption = MyFrameOption.PlayOnce,
                 }
@@ -234,37 +214,37 @@ namespace Digi.Interaction
             
             {InteractionType.CLICK, new InteractionEffect()
                 {
-                    animation = "InteractionClick",
+                    animation = "interactionclick",
                     sound = "PlayerLCDClick",
-                    delayTicks = TimeSpan.TicksPerMillisecond * 200,
+                    delayTicks = TimeSpan.TicksPerMillisecond * 250,
                 }
             },
             
             {InteractionType.TYPE, new InteractionEffect()
                 {
-                    animation = "InteractionType",
+                    animation = "interactiontype",
                     sound = "PlayerLCDType",
-                    delayTicks = TimeSpan.TicksPerMillisecond * 200,
+                    delayTicks = TimeSpan.TicksPerMillisecond * 1000,
                 }
             },
             
             {InteractionType.TAB, new InteractionEffect()
                 {
-                    animation = "InteractionTab",
+                    animation = "interactiontab",
                     sound = "PlayerLCDTab",
-                    delayTicks = TimeSpan.TicksPerMillisecond * 200,
+                    delayTicks = TimeSpan.TicksPerMillisecond * 350,
                 }
             },
             
             {InteractionType.RC_ON, new InteractionEffect()
                 {
-                    animation = "InteractionRCOn",
+                    animation = "interactionrcon",
                 }
             },
             
             {InteractionType.RC_OFF, new InteractionEffect()
                 {
-                    animation = "InteractionRCOff",
+                    animation = "interactionrcoff",
                     frameOption = MyFrameOption.PlayOnce,
                     delayTicks = TimeSpan.TicksPerMillisecond * 300,
                 }
@@ -272,13 +252,13 @@ namespace Digi.Interaction
             
             {InteractionType.CAMERA_ON, new InteractionEffect()
                 {
-                    animation = "InteractionCameraOn",
+                    animation = "interactioncameraon",
                 }
             },
             
             {InteractionType.CAMERA_OFF, new InteractionEffect()
                 {
-                    animation = "InteractionCameraOff",
+                    animation = "interactioncameraoff",
                     frameOption = MyFrameOption.PlayOnce,
                     delayTicks = TimeSpan.TicksPerMillisecond * 300,
                 }
@@ -286,7 +266,7 @@ namespace Digi.Interaction
             
             {InteractionType.USE_BUTTON, new InteractionEffect()
                 {
-                    animation = "InteractionUseButton",
+                    animation = "interactionusebutton",
                     frameOption = MyFrameOption.PlayOnce,
                     delayTicks = TimeSpan.TicksPerMillisecond * 900,
                     timeScale = 0.8f,
@@ -295,7 +275,7 @@ namespace Digi.Interaction
             
             {InteractionType.USE_HOLD_ON, new InteractionEffect()
                 {
-                    animation = "InteractionUseButton",
+                    animation = "interactionusebuttonon",
                     frameOption = MyFrameOption.StayOnLastFrame,
                     delayTicks = TimeSpan.TicksPerMillisecond * 900,
                     timeScale = 0.8f,
@@ -304,7 +284,7 @@ namespace Digi.Interaction
             
             {InteractionType.USE_HOLD_OFF, new InteractionEffect()
                 {
-                    animation = "InteractionUseButtonOff",
+                    animation = "interactionusebuttonoff",
                     frameOption = MyFrameOption.PlayOnce,
                     timeScale = 0.8f,
                 }
@@ -332,8 +312,7 @@ namespace Digi.Interaction
         public void Init()
         {
             init = true;
-            isThisHost = MyAPIGateway.Session.OnlineMode == MyOnlineModeEnum.OFFLINE || MyAPIGateway.Multiplayer.IsServer;
-            isThisHostDedicated = (MyAPIGateway.Utilities.IsDedicated && isThisHost);
+            isThisHostDedicated = (MyAPIGateway.Multiplayer.IsServer && MyAPIGateway.Utilities.IsDedicated);
             
             Log.Init();
             Log.Info("Initialized");
@@ -365,30 +344,41 @@ namespace Digi.Interaction
         
         protected override void UnloadData()
         {
-            init = false;
-            
-            interactEntity.Clear();
-            removeInteractEntity.Clear();
-            
-            prevKeys.Clear();
-            keys.Clear();
-            
-            planets.Clear();
-            gravityGenerators.Clear();
-            
-            if(!isThisHostDedicated)
+            try
             {
-                if(settings != null)
+                if(init)
                 {
-                    settings.Close();
-                    settings = null;
+                    init = false;
+                    
+                    interactEntity.Clear();
+                    removeInteractEntity.Clear();
+                    
+                    prevKeys.Clear();
+                    keys.Clear();
+                    
+                    planets.Clear();
+                    gravityGenerators.Clear();
+                    
+                    if(!isThisHostDedicated)
+                    {
+                        if(settings != null)
+                        {
+                            settings.Close();
+                            settings = null;
+                        }
+                        
+                        MyAPIGateway.Utilities.MessageEntered -= MessageEntered;
+                        MyAPIGateway.Multiplayer.UnregisterMessageHandler(PACKET, ReceivedPacket);
+                    }
+                    
+                    Log.Info("Mod unloaded");
                 }
-                
-                MyAPIGateway.Utilities.MessageEntered -= MessageEntered;
-                MyAPIGateway.Multiplayer.UnregisterMessageHandler(PACKET, ReceivedPacket);
+            }
+            catch(Exception e)
+            {
+                Log.Error(e);
             }
             
-            Log.Info("Mod unloaded");
             Log.Close();
         }
         
@@ -396,31 +386,6 @@ namespace Digi.Interaction
         {
             try
             {
-                // TODO testing/remove
-                /*
-                {
-                    if(characterEntity == null)
-                    {
-                        MyAPIGateway.Utilities.ShowMessage("", "no char ent!");
-                        return;
-                    }
-                    
-                    (characterEntity as MySkinnedEntity).UseNewAnimationSystem = false;
-                    
-                    send = false;
-                    var args = msg.Split(' ');
-                    
-                    foreach(var arg in args)
-                    {
-                        (characterEntity as MySkinnedEntity).AnimationController.TriggerAction(MyStringId.GetOrCompute(arg));
-                    }
-                    
-                    MyAPIGateway.Utilities.ShowMessage("", "'"+String.Join("+", args)+"' executed!");
-                }
-                
-                return;
-                 */
-                
                 if(msg.StartsWith("/interaction", StringComparison.InvariantCultureIgnoreCase))
                 {
                     send = false;
@@ -457,9 +422,13 @@ namespace Digi.Interaction
         {
             try
             {
-                string[] data = encode.GetString(bytes).Split(SEPARATOR);
-                var type = (InteractionType)int.Parse(data[0]);
-                var entId = long.Parse(data[1]);
+                int index = 0;
+                
+                var type = (InteractionType)bytes[index];
+                index += sizeof(byte);
+                
+                long entId = BitConverter.ToInt64(bytes, index);
+                index += sizeof(long);
                 
                 if(!MyAPIGateway.Entities.EntityExists(entId))
                     return;
@@ -470,12 +439,22 @@ namespace Digi.Interaction
                 if(skinned == null)
                     return;
                 
-                if(data.Length > 2)
+                if(bytes.Length > index)
                 {
-                    if(data.Length > 5)
-                        InternalInteraction(ent, type, long.Parse(data[2]), new Vector3(float.Parse(data[3]), float.Parse(data[4]), float.Parse(data[5])));
+                    long targetId = BitConverter.ToInt64(bytes, index);
+                    index += sizeof(long);
+                    
+                    if(bytes.Length > index)
+                    {
+                        var pos = new Vector3(BitConverter.ToSingle(bytes, index),
+                                              BitConverter.ToSingle(bytes, index + sizeof(float)),
+                                              BitConverter.ToSingle(bytes, index + sizeof(float) * 2));
+                        index += sizeof(float) * 3;
+                        
+                        InternalInteraction(ent, type, targetId, pos);
+                    }
                     else
-                        InternalInteraction(ent, type, long.Parse(data[2]));
+                        InternalInteraction(ent, type, targetId);
                 }
                 else
                 {
@@ -503,31 +482,48 @@ namespace Digi.Interaction
                 
                 if(effect.sound != null)
                 {
-                    var data = new StringBuilder();
-                    data.Append((int)type);
-                    data.Append(SEPARATOR);
-                    data.Append(skinned.EntityId);
+                    int len = sizeof(byte) + sizeof(long);
                     
                     if(target != null)
                     {
-                        data.Append(SEPARATOR);
-                        data.Append(target.EntityId);
+                        len += sizeof(long);
+                        
+                        if(offset.HasValue)
+                            len += sizeof(float) * 3;
+                    }
+                    
+                    var bytes = new byte[len];
+                    bytes[0] = (byte)type; // interaction type
+                    len = 1;
+                    
+                    var data = BitConverter.GetBytes(skinned.EntityId);
+                    Array.Copy(data, 0, bytes, len, data.Length);
+                    len += data.Length;
+                    
+                    if(target != null)
+                    {
+                        data = BitConverter.GetBytes(target.EntityId);
+                        Array.Copy(data, 0, bytes, len, data.Length);
+                        len += data.Length;
                         
                         if(offset.HasValue)
                         {
-                            data.Append(SEPARATOR);
-                            data.Append(offset.Value.X);
-                            data.Append(SEPARATOR);
-                            data.Append(offset.Value.Y);
-                            data.Append(SEPARATOR);
-                            data.Append(offset.Value.Z);
+                            data = BitConverter.GetBytes(offset.Value.X);
+                            Array.Copy(data, 0, bytes, len, data.Length);
+                            len += data.Length;
+                            
+                            data = BitConverter.GetBytes(offset.Value.Y);
+                            Array.Copy(data, 0, bytes, len, data.Length);
+                            len += data.Length;
+                            
+                            data = BitConverter.GetBytes(offset.Value.Z);
+                            Array.Copy(data, 0, bytes, len, data.Length);
+                            len += data.Length;
                         }
                     }
                     
-                    var bytes = encode.GetBytes(data.ToString());
                     var pos = skinned.WorldMatrix.Translation;
-                    bool reliable = false;
-                    bool checkDistance = !reliable;
+                    bool checkDistance = true;
                     
                     switch(type)
                     {
@@ -535,15 +531,18 @@ namespace Digi.Interaction
                         case InteractionType.START_TARGET:
                         case InteractionType.END:
                         case InteractionType.END_TARGET:
-                            reliable = true;
+                            checkDistance = false;
                             break;
                     }
                     
                     MyAPIGateway.Players.GetPlayers(players, delegate(IMyPlayer p)
                                                     {
-                                                        if(p.SteamUserId != MyAPIGateway.Multiplayer.MyId && !(checkDistance && Vector3D.DistanceSquared(p.GetPosition(), pos) > PACKET_SOUND_DISTANCE))
+                                                        if(p.SteamUserId != MyAPIGateway.Multiplayer.MyId)
                                                         {
-                                                            MyAPIGateway.Multiplayer.SendMessageTo(PACKET, bytes, p.SteamUserId, reliable);
+                                                            if(checkDistance && Vector3D.DistanceSquared(p.GetPosition(), pos) > PACKET_SOUND_DISTANCE)
+                                                                return false;
+                                                            
+                                                            MyAPIGateway.Multiplayer.SendMessageTo(PACKET, bytes, p.SteamUserId);
                                                         }
                                                         
                                                         return false;
@@ -700,7 +699,7 @@ namespace Digi.Interaction
             var charPos = charEnt.WorldMatrix.Translation + Vector3.TransformNormal(lcdBoneMatrix.Translation, charEnt.WorldMatrix); // + (charEnt.WorldMatrix.Up * 0.05)
             var distSq = Vector3D.DistanceSquared(charPos, targetPos);
             
-            if(distSq > 15*15)
+            if(distSq > 225) // 15m squared
             {
                 interacted.Clear();
                 return true;
@@ -850,13 +849,17 @@ namespace Digi.Interaction
                         {
                             float width = (float)settings.cableWidth / 2;
                             MyTransparentGeometry.AddLineBillboard("SquareIgnoreDepth", CABLE_COLOR, start, dir, len, width, 0, false, -1);
-                            // TODO fix sprites not showing against planet skybox
                         }
                     }
                 }
             }
             
             return true;
+        }
+        
+        private void UpdateCharacterReference(IMyEntity ent)
+        {
+            characterEntity = ent;
         }
         
         public override void UpdateAfterSimulation()
@@ -876,21 +879,35 @@ namespace Digi.Interaction
                 
                 if(++skipPlanets >= SKIP_TICKS_PLANETS)
                 {
+                    skipPlanets = 0;
+                    
                     planets.Clear();
                     MyAPIGateway.Entities.GetEntities(ents, delegate(IMyEntity e)
                                                       {
-                                                          if(e is MyPlanet)
+                                                          var planet = e as MyPlanet;
+                                                          
+                                                          if(planet != null)
                                                           {
                                                               if(!planets.ContainsKey(e.EntityId))
                                                                   planets.Add(e.EntityId, e as MyPlanet);
+                                                              
+                                                              return false;
                                                           }
-                                                          else if(e is IMyCharacter)
+                                                          
+                                                          // TODO remove in a future version
+                                                          // resets the new animation system back to true for default character models
+                                                          var character = e as IMyCharacter;
+                                                          
+                                                          if(character != null)
                                                           {
-                                                              var character = e as IMyCharacter;
                                                               var skinned = e as MySkinnedEntity;
                                                               
-                                                              if(character.IsPlayer && skinned != null && skinned.UseNewAnimationSystem)
-                                                                  skinned.UseNewAnimationSystem = false;
+                                                              if(character.IsPlayer && skinned != null && !skinned.UseNewAnimationSystem && character.ToString() == "Default_Astronaut")
+                                                              {
+                                                                  skinned.UseNewAnimationSystem = true;
+                                                              }
+                                                              
+                                                              return false;
                                                           }
                                                           
                                                           return false; // no reason to add to the list
@@ -921,46 +938,37 @@ namespace Digi.Interaction
                 
                 var controlled = MyAPIGateway.Session.ControlledObject;
                 
-                if(controlled is IMyCharacter)
+                if(controlled == null || controlled.Entity == null || (characterEntity != null && characterEntity.Closed))
                 {
-                    characterEntity = controlled.Entity;
+                    UpdateCharacterReference(null);
                 }
-                else if(characterEntity != null && (characterEntity.Closed || (characterEntity as IMyDestroyableObject).Integrity == 0))
+                else
                 {
-                    characterEntity = null;
-                    
-                    if(controlled is MyCockpit)
+                    if(controlled is IMyCharacter)
                     {
-                        if(characterEntity == null && controlled.Entity.Hierarchy.Children.Count > 0)
-                        {
-                            foreach(var child in controlled.Entity.Hierarchy.Children)
-                            {
-                                if(child.Entity is IMyCharacter && child.Entity.DisplayName == MyAPIGateway.Session.Player.DisplayName)
-                                {
-                                    characterEntity = child.Entity;
-                                    break;
-                                }
-                            }
-                        }
+                        UpdateCharacterReference(controlled.Entity);
+                    }
+                    else if(controlled is MyShipController)
+                    {
+                        var shipController = controlled as MyShipController;
+                        UpdateCharacterReference(shipController.Pilot);
                     }
                 }
                 
                 if(characterEntity != null)
                 {
                     ulong myId = MyAPIGateway.Multiplayer.MyId;
+                    bool inMenu = MyGuiScreenGamePlay.ActiveGameplayScreen != null;
                     var skinned = (characterEntity as MySkinnedEntity);
                     var intEnt = (MyAPIGateway.Session.ControlledObject is IMyCharacter ? MyGuiScreenTerminal.InteractedEntity as IMyCubeBlock : null);
-                    bool inMenu = MyGuiScreenGamePlay.ActiveGameplayScreen != null;
-                    
-                    if(skinned.UseNewAnimationSystem) // disable the new animation system until they actually explain it xD
-                        skinned.UseNewAnimationSystem = false;
                     
                     if(!inMenu && !(controlled is MyRemoteControl))
                     {
-                        var useObject = MyHud.SelectedObjectHighlight.InteractiveObject;
+                        var selected = MyHud.SelectedObjectHighlight;
                         
-                        if(useObject != null)
+                        if(selected.Visible && selected.InteractiveObject != null)
                         {
+                            var useObject = selected.InteractiveObject;
                             string type = useObject.ToString();
                             int index = type.LastIndexOf('.') + 1;
                             
@@ -1019,11 +1027,10 @@ namespace Digi.Interaction
                             if(intEnt != null)
                             {
                                 Vector3? offset = null;
+                                var block = intEnt as MyCubeBlock;
                                 
-                                if(intEnt is MyCubeBlock)
+                                if(block != null)
                                 {
-                                    var block = intEnt as MyCubeBlock;
-                                    
                                     //var pos = Sandbox.Game.Gui.MyHud.SelectedObjectHighlight.InteractiveObject.WorldMatrix.Translation; // not allowed in scripts :(
                                     //offset = pos - block.WorldMatrix.Translation;
                                     
@@ -1032,18 +1039,12 @@ namespace Digi.Interaction
                                     var box = new MyOrientedBoundingBoxD(block.WorldMatrix);
                                     box.Center = block.WorldMatrix.Translation + Vector3.TransformNormal(block.BlockDefinition.ModelOffset, block.WorldMatrix);
                                     box.HalfExtent = block.BlockDefinition.Size * (block.CubeGrid.GridSize / 2) + 0.15f;
+                                    var end = start + view.Forward * 6;
+                                    var hit = default(Vector3D);
                                     
-                                    for(float f = 0; f <= 6; f += 0.1f)
+                                    if(MyHudCrosshair.GetTarget(start, end, ref hit) && box.Contains(ref hit))
                                     {
-                                        var end = start + view.Forward * f;
-                                        
-                                        if(MyAPIGateway.Entities.IsRaycastBlocked(start, end))
-                                        {
-                                            if(box.Contains(ref end))
-                                                offset = Vector3D.TransformNormal(end - block.WorldMatrix.Translation, block.PositionComp.WorldMatrixInvScaled);
-                                            
-                                            break;
-                                        }
+                                        offset = Vector3D.TransformNormal(hit - block.WorldMatrix.Translation, block.PositionComp.WorldMatrixInvScaled);
                                     }
                                 }
                                 
@@ -1055,7 +1056,6 @@ namespace Digi.Interaction
                                 TriggerInteraction(skinned, InteractionType.START);
                                 startTime = DateTime.UtcNow.Ticks + interactionEffect[InteractionType.START].delayTicks;
                             }
-                            
                         }
                         else
                         {
@@ -1063,8 +1063,7 @@ namespace Digi.Interaction
                             
                             if(startTime == 0 || startTime <= time)
                             {
-                                if(startTime != 0)
-                                    startTime = 0;
+                                startTime = 0;
                                 
                                 if(inMenu)
                                 {
@@ -1158,23 +1157,13 @@ namespace Digi.Interaction
                         lcdShown = false;
                         lastPage = MyTerminalPageEnum.None;
                         lastInteraction = 0;
+                        lastInCamera = false;
+                        lastInRC = false;
                         
                         InteractionType type = InteractionType.END;
                         
-                        if(lastInRC)
-                        {
-                            lastInRC = false;
-                            type = InteractionType.RC_OFF;
-                        }
-                        else if(lastInCamera)
-                        {
-                            lastInCamera = false;
-                            type = InteractionType.CAMERA_OFF;
-                        }
-                        else if(interactEntity.ContainsKey(characterEntity.EntityId))
-                        {
+                        if(interactEntity.ContainsKey(characterEntity.EntityId))
                             type = InteractionType.END_TARGET;
-                        }
                         
                         TriggerInteraction(skinned, type);
                     }
@@ -1201,11 +1190,12 @@ namespace Digi.Interaction
                         continue;
                     
                     var dir = planet.PositionComp.GetPosition() - point;
+                    var gravComp = planet.Components.Get<MyGravityProviderComponent>() as MySphericalNaturalGravityComponent;
                     
-                    if(dir.LengthSquared() <= planet.GravityLimitSq)
+                    if(dir.LengthSquared() <= gravComp.GravityLimitSq)
                     {
                         dir.Normalize();
-                        natural += dir * planet.GetGravityMultiplier(point);
+                        natural += dir * gravComp.GetGravityMultiplier(point);
                     }
                 }
                 
@@ -1242,7 +1232,7 @@ namespace Digi.Interaction
                 artificial *= MathHelper.Clamp(1f - natural.Length() * 2f, 0f, 1f);
                 var gravity = (natural + artificial);
                 
-                if(gravity.LengthSquared() == 0)
+                if(Math.Abs(gravity.LengthSquared()) < float.Epsilon)
                     return null;
                 
                 return gravity * 9.81f;
@@ -1254,8 +1244,8 @@ namespace Digi.Interaction
             
             return null;
         }
-
-        public static bool KeyListEqual(List<MyKeys> keys, HashSet<MyKeys> prevKeys)
+        
+        private static bool KeyListEqual(List<MyKeys> keys, HashSet<MyKeys> prevKeys)
         {
             if(keys.Count != prevKeys.Count)
                 return false;

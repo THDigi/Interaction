@@ -5,7 +5,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionStart</SubtypeId>
+        <SubtypeId>interactionstart</SubtypeId>
       </Id>
       <DisplayName>InteractionStart</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -20,7 +20,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionStartTarget</SubtypeId>
+        <SubtypeId>interactionstarttarget</SubtypeId>
       </Id>
       <DisplayName>InteractionStartTarget</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -35,7 +35,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionEnd</SubtypeId>
+        <SubtypeId>interactionend</SubtypeId>
       </Id>
       <DisplayName>InteractionEnd</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -50,7 +50,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionEndTarget</SubtypeId>
+        <SubtypeId>interactionendtarget</SubtypeId>
       </Id>
       <DisplayName>InteractionEndTarget</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -65,7 +65,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionClick</SubtypeId>
+        <SubtypeId>interactionclick</SubtypeId>
       </Id>
       <DisplayName>InteractionClick</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -80,7 +80,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionType</SubtypeId>
+        <SubtypeId>interactiontype</SubtypeId>
       </Id>
       <DisplayName>InteractionType</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -95,7 +95,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionTab</SubtypeId>
+        <SubtypeId>interactiontab</SubtypeId>
       </Id>
       <DisplayName>InteractionTab</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -110,7 +110,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionRCOn</SubtypeId>
+        <SubtypeId>interactionrcon</SubtypeId>
       </Id>
       <DisplayName>InteractionRCOn</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -125,7 +125,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionRCOff</SubtypeId>
+        <SubtypeId>interactionrcoff</SubtypeId>
       </Id>
       <DisplayName>InteractionRCOff</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -140,7 +140,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionCameraOn</SubtypeId>
+        <SubtypeId>interactioncameraon</SubtypeId>
       </Id>
       <DisplayName>InteractionCameraOn</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -155,7 +155,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionCameraOff</SubtypeId>
+        <SubtypeId>interactioncameraoff</SubtypeId>
       </Id>
       <DisplayName>InteractionCameraOff</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -170,7 +170,7 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionUseButton</SubtypeId>
+        <SubtypeId>interactionusebutton</SubtypeId>
       </Id>
       <DisplayName>InteractionUseButton</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>
@@ -185,7 +185,22 @@
     <Animation>
       <Id>
         <TypeId>AnimationDefinition</TypeId>
-        <SubtypeId>InteractionUseButtonOff</SubtypeId>
+        <SubtypeId>interactionusebuttonon</SubtypeId>
+      </Id>
+      <DisplayName>InteractionUseButtonOn</DisplayName>
+      <Icon>Textures\FAKE.dds</Icon>
+      <AnimationModel>Models\Animations\InteractionUseButton.mwm</AnimationModel>
+      <ClipIndex>0</ClipIndex>
+      <InfluenceArea>Spine LeftHand</InfluenceArea>
+      <Public>false</Public>
+      <AllowInCockpit>true</AllowInCockpit>
+      <AllowWithWeapon>false</AllowWithWeapon>
+    </Animation>
+
+    <Animation>
+      <Id>
+        <TypeId>AnimationDefinition</TypeId>
+        <SubtypeId>interactionusebuttonoff</SubtypeId>
       </Id>
       <DisplayName>InteractionUseButtonOff</DisplayName>
       <Icon>Textures\FAKE.dds</Icon>

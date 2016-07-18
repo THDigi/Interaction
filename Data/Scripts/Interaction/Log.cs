@@ -12,12 +12,13 @@ namespace Digi.Utils
     public static class Log
     {
         public const string MOD_NAME = "Animated Interaction";
+        public const string MOD_FOLDER = "Interaction";
         public const int WORKSHOP_ID = 652337022;
         public const string LOG_FILE = "info.log";
         
         private static System.IO.TextWriter writer = null;
         private static IMyHudNotification notify = null;
-        private static StringBuilder cache = new StringBuilder(64);
+        private static readonly StringBuilder cache = new StringBuilder(64);
         private static List<string> preInitMessages = new List<string>(0);
         private static int indent = 0;
         
@@ -52,7 +53,7 @@ namespace Digi.Utils
                 
                 if(MyAPIGateway.Session != null)
                 {
-                    string text = MOD_NAME + " error - open %AppData%/SpaceEngineers/Storage/" + WORKSHOP_ID + "_" + MOD_NAME + "/" + LOG_FILE + " for details";
+                    string text = MOD_NAME + " error - open %AppData%/SpaceEngineers/Storage/" + WORKSHOP_ID + "_" + MOD_FOLDER + "/" + LOG_FILE + " for details";
                     
                     if(notify == null)
                     {
