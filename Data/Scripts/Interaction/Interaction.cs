@@ -1,37 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.ModAPI;
 using Sandbox.Game;
-using Sandbox.Game.Entities;
 using Sandbox.Game.Components;
+using Sandbox.Game.Entities;
+using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
 using VRage.Game;
+using VRage.Game.Components;
 using VRage.Game.Entity;
 using VRage.Game.ModAPI;
-using VRage.Game.ModAPI.Interfaces;
 using VRage.Input;
-using VRage.ObjectBuilders;
-using VRage.Game.Components;
 using VRage.ModAPI;
+using VRage.ObjectBuilders;
 using VRageMath;
-
-using Digi.Utils;
 
 namespace Digi.Interaction
 {
     [MySessionComponentDescriptor(MyUpdateOrder.AfterSimulation)]
     public class InteractionMod : MySessionComponentBase
     {
+        private const int WORKSHOP_ID = 652337022;
+        private const int WORKSHOP_ID_DEV = 650441224;
+        private const string LOCAL_FOLDER = "Interaction";
+        private const string LOCAL_FOLDER_DEV = "Interaction.dev";
+
         public override void LoadData()
         {
-            Log.SetUp("Animated Interaction", 652337022, "Interaction");
+            Log.SetUp("Animated Interaction", WORKSHOP_ID, "Interaction");
             instance = this;
         }
-
-        private const string MOD_DEV_NAME = "Interaction.dev";
-        private const int WORKSHOP_DEV_ID = 650441224;
 
         public enum InteractionType
         {
@@ -150,7 +150,8 @@ namespace Digi.Interaction
         private long lastInteraction = 0;
         private MyTerminalPageEnum lastPage = MyTerminalPageEnum.None;
         private short skipPlanets = SKIP_TICKS_PLANETS;
-        private string pathToMod = "";
+        public string pathToMod = null;
+        public string pathToCable = null;
 
         private Dictionary<long, Interacted> interactEntity = new Dictionary<long, Interacted>();
         private List<long> removeInteractEntity = new List<long>();
@@ -314,36 +315,35 @@ namespace Digi.Interaction
             "MyUseObjectMedicalRoom",
         };
 
+        private string GetModPath(ulong workshopId, ulong workshopIdDev, string localFolder, string localFolderDev)
+        {
+            foreach(var mod in MyAPIGateway.Session.Mods)
+            {
+                if(mod.PublishedFileId == 0 ? (mod.Name == localFolder || mod.Name == localFolderDev) : (mod.PublishedFileId == workshopId || mod.PublishedFileId == workshopIdDev))
+                    return Path.Combine(MyAPIGateway.Utilities.GamePaths.ModsPath, mod.Name);
+            }
+
+            return null;
+        }
+
         public void Init()
         {
             init = true;
             isThisHostDedicated = (MyAPIGateway.Multiplayer.IsServer && MyAPIGateway.Utilities.IsDedicated);
 
             Log.Init();
-            Log.Info("Initialized");
 
             if(!isThisHostDedicated)
             {
+                pathToMod = GetModPath(WORKSHOP_ID, WORKSHOP_ID_DEV, LOCAL_FOLDER, LOCAL_FOLDER_DEV);
+
+                if(pathToMod == null)
+                    Log.Error("Can't find this mod in the mod list!");
+
                 settings = new Settings();
 
                 MyAPIGateway.Utilities.MessageEntered += MessageEntered;
                 MyAPIGateway.Multiplayer.RegisterMessageHandler(PACKET, ReceivedPacket);
-
-                var mods = MyAPIGateway.Session.GetCheckpoint("").Mods;
-                bool found = false;
-
-                foreach(var mod in mods)
-                {
-                    if(mod.PublishedFileId == 0 ? mod.Name == MOD_DEV_NAME : (mod.PublishedFileId == Log.workshopId || mod.PublishedFileId == WORKSHOP_DEV_ID))
-                    {
-                        pathToMod = MyAPIGateway.Utilities.GamePaths.ModsPath + @"\" + mod.Name + @"\";
-                        found = true;
-                        break;
-                    }
-                }
-
-                if(!found)
-                    Log.Error("Can't find mod " + Log.workshopId + ".sbm or " + MOD_DEV_NAME + " in the mod list!");
             }
         }
 
@@ -354,15 +354,6 @@ namespace Digi.Interaction
                 if(init)
                 {
                     init = false;
-
-                    interactEntity.Clear();
-                    removeInteractEntity.Clear();
-
-                    prevKeys.Clear();
-                    keys.Clear();
-
-                    planets.Clear();
-                    gravityGenerators.Clear();
 
                     if(!isThisHostDedicated)
                     {
@@ -375,8 +366,6 @@ namespace Digi.Interaction
                         MyAPIGateway.Utilities.MessageEntered -= MessageEntered;
                         MyAPIGateway.Multiplayer.UnregisterMessageHandler(PACKET, ReceivedPacket);
                     }
-
-                    Log.Info("Mod unloaded");
                 }
             }
             catch(Exception e)
@@ -385,6 +374,20 @@ namespace Digi.Interaction
             }
 
             Log.Close();
+
+            players.Clear();
+            ents.Clear();
+            detectableEnts.Clear();
+            hits.Clear();
+
+            interactEntity.Clear();
+            removeInteractEntity.Clear();
+
+            prevKeys.Clear();
+            keys.Clear();
+
+            planets.Clear();
+            gravityGenerators.Clear();
         }
 
         public void MessageEntered(string msg, ref bool send)
@@ -815,7 +818,7 @@ namespace Digi.Interaction
                     var start = GetCurvePointAt(ref p0, ref p1, ref p2, ref p3, t - (step + 0.005));
                     var end = GetCurvePointAt(ref p0, ref p1, ref p2, ref p3, t);
 
-                    if(model)
+                    if(model && pathToCable != null)
                     {
                         if(r.ents.Count > modelIndex)
                         {
@@ -824,7 +827,7 @@ namespace Digi.Interaction
                         else
                         {
                             e = new MyEntity();
-                            e.Init(null, pathToMod + @"Models\Cable" + settings.cableModel + ".mwm", targetEnt as MyEntity, null, null);
+                            e.Init(null, pathToCable, targetEnt as MyEntity, null, null);
                             e.Flags = EntityFlags.Visible | EntityFlags.NeedsDraw | EntityFlags.NeedsDrawFromParent | EntityFlags.InvalidateOnMove;
                             e.OnAddedToScene(null);
                             r.ents.Add(e);
@@ -846,7 +849,7 @@ namespace Digi.Interaction
                         if(len > 0.001f)
                         {
                             float width = (float)settings.cableWidth / 2;
-                            MyTransparentGeometry.AddLineBillboard("SquareIgnoreDepth", CABLE_COLOR, start, dir, len, width, 0, false, -1);
+                            MyTransparentGeometry.AddLineBillboard("Square", CABLE_COLOR, start, dir, len, width);
                         }
                     }
                 }
@@ -860,7 +863,7 @@ namespace Digi.Interaction
             characterEntity = ent as IMyCharacter;
         }
 
-        private string GetSelectedAreaName() // code converted from Sandbox.Game.Entities.Character.DoDetection(), NOTE: it only fits this mods' needs, it's not fully converted.
+        private string GetSelectedAreaName() // code converted from Sandbox.Game.Entities.Character.MyCharacterRaycastDetectorComponent.DoDetection(), NOTE: it only fits this mods' needs, it's not fully converted.
         {
             var headMatrix = characterEntity.GetHeadMatrix(false);
 

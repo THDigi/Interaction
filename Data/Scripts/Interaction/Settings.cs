@@ -4,7 +4,6 @@ using System.Text;
 using System.IO;
 using Sandbox.ModAPI;
 using VRageMath;
-using Digi.Utils;
 
 namespace Digi.Interaction
 {
@@ -104,7 +103,14 @@ namespace Digi.Interaction
                             continue;
                         case "cablemodel":
                             if(int.TryParse(args[1], out i))
+                            {
                                 cableModel = MathHelper.Clamp(i, 0, 3);
+
+                                var mod = InteractionMod.instance;
+
+                                if(mod.pathToMod != null)
+                                    mod.pathToCable = Path.Combine(mod.pathToMod, @"Models\Cable" + cableModel + ".mwm");
+                            }
                             else
                                 Log.Error("Invalid " + args[0] + " value: " + args[1]);
                             continue;
