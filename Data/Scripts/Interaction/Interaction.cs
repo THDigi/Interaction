@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.Definitions;
 using Sandbox.Game;
 using Sandbox.Game.Components;
 using Sandbox.Game.Entities;
+using Sandbox.Game.Entities.Character.Components;
 using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
 using VRage.Game;
 using VRage.Game.Components;
 using VRage.Game.Entity;
+using VRage.Game.Entity.UseObject;
 using VRage.Game.ModAPI;
 using VRage.Input;
 using VRage.ModAPI;
@@ -68,11 +71,12 @@ namespace Digi.Interaction
 
             public InteractionEffect() { }
 
-            public void PlayAnimation(MySkinnedEntity skinned, bool forceStayOnLastFrame = false)
+            public void PlayAnimation(IMyCharacter character, bool forceStayOnLastFrame = false)
             {
+                var skinned = (MySkinnedEntity)character;
+
                 if(skinned.UseNewAnimationSystem)
                 {
-                    var character = skinned as IMyCharacter;
                     character.TriggerCharacterAnimationEvent(animation, true);
                 }
                 else
@@ -141,6 +145,7 @@ namespace Digi.Interaction
         public Settings settings = null;
 
         private IMyCharacter characterEntity = null;
+        private bool unsupportedCharacter = false;
 
         private bool lcdShown = false;
         private bool lastInRC = false;
@@ -159,7 +164,7 @@ namespace Digi.Interaction
         private List<MyKeys> keys = new List<MyKeys>();
         private HashSet<MyKeys> prevKeys = new HashSet<MyKeys>();
 
-        public Dictionary<long, MyPlanet> planets = new Dictionary<long, MyPlanet>();
+        public List<MyPlanet> planets = new List<MyPlanet>();
         public Dictionary<long, IMyGravityProvider> gravityGenerators = new Dictionary<long, IMyGravityProvider>();
 
         private static readonly List<IMyPlayer> players = new List<IMyPlayer>(0);
@@ -475,18 +480,18 @@ namespace Digi.Interaction
             }
         }
 
-        public void TriggerInteraction(MySkinnedEntity skinned, InteractionType type, IMyEntity target = null, Vector3? offset = null, bool forceStayOnLastFrame = false)
+        public void TriggerInteraction(IMyCharacter character, InteractionType type, IMyEntity target = null, Vector3? offset = null, bool forceStayOnLastFrame = false)
         {
             try
             {
                 var effect = interactionEffect[type];
 
-                effect.PlayAnimation(skinned, forceStayOnLastFrame);
+                effect.PlayAnimation(character, forceStayOnLastFrame);
 
                 if(target != null)
-                    InternalInteraction(skinned, type, target.EntityId, offset);
+                    InternalInteraction(character, type, target.EntityId, offset);
                 else
-                    InternalInteraction(skinned, type);
+                    InternalInteraction(character, type);
 
                 if(effect.sound != null)
                 {
@@ -504,7 +509,7 @@ namespace Digi.Interaction
                     bytes[0] = (byte)type; // interaction type
                     len = 1;
 
-                    var data = BitConverter.GetBytes(skinned.EntityId);
+                    var data = BitConverter.GetBytes(character.EntityId);
                     Array.Copy(data, 0, bytes, len, data.Length);
                     len += data.Length;
 
@@ -530,7 +535,7 @@ namespace Digi.Interaction
                         }
                     }
 
-                    var pos = skinned.WorldMatrix.Translation;
+                    var pos = character.WorldMatrix.Translation;
                     bool checkDistance = true;
 
                     switch(type)
@@ -565,6 +570,8 @@ namespace Digi.Interaction
 
         private void InternalInteraction(IMyEntity ent, InteractionType type, long targetId = 0, Vector3? offset = null)
         {
+            string sound = interactionEffect[type].sound;
+
             if(type == InteractionType.START_TARGET)
             {
                 if(targetId == 0)
@@ -590,7 +597,7 @@ namespace Digi.Interaction
                     interact.Clear();
                 }
 
-                PlaySound(ent, "PlayerLCDStartTarget");
+                PlaySound(ent, sound);
                 return;
             }
             else if(type == InteractionType.END_TARGET)
@@ -599,18 +606,15 @@ namespace Digi.Interaction
                 {
                     interactEntity[ent.EntityId].remove = true;
                     interactEntity[ent.EntityId].time = DateTime.UtcNow.Ticks;
-                    PlaySound(ent, "PlayerLCDEndTarget");
+                    PlaySound(ent, sound);
                     return;
                 }
             }
 
-            if(characterEntity != null && characterEntity.EntityId == ent.EntityId)
+            if(characterEntity != null && characterEntity == ent)
                 return; // block click/tab/type sounds from your own menus
 
-            string sound = interactionEffect[type].sound;
-
-            if(sound != null && settings.interactionSounds > 0)
-                PlaySound(ent, sound);
+            PlaySound(ent, sound);
         }
 
         private bool InteractLoop(long charId, Interacted interacted)
@@ -676,11 +680,7 @@ namespace Digi.Interaction
                 int fingerBone;
 
                 if(charEnt.AnimationController.FindBone(BONE_RIGHTHAND_INDEXTIP, out fingerBone) == null)
-                {
-                    var obj = charEnt.GetObjectBuilder(false) as MyObjectBuilder_Character;
-                    Log.Error("Can't find bone '" + BONE_RIGHTHAND_INDEXTIP + "' on character type '" + obj.CharacterModel + "'");
                     return false;
-                }
 
                 var fingerBoneMatrix = charEnt.BoneAbsoluteTransforms[fingerBone];
                 targetPos = charEnt.WorldMatrix.Translation + Vector3.TransformNormal(fingerBoneMatrix.Translation, charEnt.WorldMatrix);
@@ -697,11 +697,7 @@ namespace Digi.Interaction
             int lcdBone;
 
             if(charEnt.AnimationController.FindBone(BONE_LEFTARM_LCD, out lcdBone) == null)
-            {
-                var obj = charEnt.GetObjectBuilder(false) as MyObjectBuilder_Character;
-                Log.Error("Can't find bone '" + BONE_LEFTARM_LCD + "' on character type '" + obj.CharacterModel + "'");
                 return false;
-            }
 
             var lcdBoneMatrix = charEnt.BoneAbsoluteTransforms[lcdBone];
             var charPos = charEnt.WorldMatrix.Translation + Vector3.TransformNormal(lcdBoneMatrix.Translation, charEnt.WorldMatrix); // + (charEnt.WorldMatrix.Up * 0.05)
@@ -843,13 +839,13 @@ namespace Digi.Interaction
                     }
                     else
                     {
-                        Vector3 dir = end - start;
+                        Vector3 dir = (end - start);
                         float len = dir.Normalize();
 
                         if(len > 0.001f)
                         {
                             float width = (float)settings.cableWidth / 2;
-                            MyTransparentGeometry.AddLineBillboard("Square", CABLE_COLOR, start, dir, len, width);
+                            MyTransparentGeometry.AddLineBillboard("WeaponLaser", CABLE_COLOR, start, dir, len, width);
                         }
                     }
                 }
@@ -858,120 +854,13 @@ namespace Digi.Interaction
             return true;
         }
 
-        private void UpdateCharacterReference(IMyEntity ent)
-        {
-            characterEntity = ent as IMyCharacter;
-        }
-
-        private string GetSelectedAreaName() // code converted from Sandbox.Game.Entities.Character.MyCharacterRaycastDetectorComponent.DoDetection(), NOTE: it only fits this mods' needs, it's not fully converted.
-        {
-            var headMatrix = characterEntity.GetHeadMatrix(false);
-
-            // TODO remove?
-            //var headPos = headMatrix.Translation - headMatrix.Forward * 0.3;
-            //
-            //Vector3D from;
-            //Vector3D dir;
-            //
-            //if(false)
-            //{
-            //    var cameraMatrix = MyAPIGateway.Session.Camera.WorldMatrix;
-            //    dir = cameraMatrix.Forward;
-            //    from = MyUtils.LinePlaneIntersection(headPos, (Vector3)dir, cameraMatrix.Translation, (Vector3)dir);
-            //}
-            //else
-            //{
-            //    dir = headMatrix.Forward;
-            //    from = headPos;
-            //}
-            //
-            //var to = from + dir * MyConstants.DEFAULT_INTERACTIVE_DISTANCE;
-
-            var from = headMatrix.Translation - headMatrix.Forward * 0.3;
-            var to = from + headMatrix.Forward * MyConstants.DEFAULT_INTERACTIVE_DISTANCE;
-
-            sphere.Center = from;
-            detectableEnts.Clear();
-            MyGamePruningStructure.GetAllEntitiesInSphere(ref sphere, detectableEnts, MyEntityQueryType.Both);
-
-            float closestDistance = float.MaxValue;
-            IMyEntity closestEntity = null;
-            string closestType = null;
-
-            foreach(MyEntity ent in detectableEnts)
-            {
-                if(!(ent is IMyTerminalBlock)) // ignore non-TerminalBlock entities
-                    continue;
-
-                var useObjectComp = ent.Components.Get<MyUseObjectsComponentBase>() as MyUseObjectsComponent;
-
-                if(useObjectComp == null)
-                    continue;
-
-                float distance;
-                var useObj = useObjectComp.RaycastDetectors(from, to, out distance) as object; // casting to object because IMyUseObject is prohibited, even storing it!
-
-                if(useObj != null && Math.Abs(distance) < Math.Abs(closestDistance))
-                {
-                    closestDistance = distance;
-                    closestEntity = ent;
-                    closestType = useObj.ToString();
-                }
-            }
-
-            if(closestEntity != null)
-            {
-                hits.Clear();
-                MyAPIGateway.Physics.CastRay(from, to, hits); // cast a ray to ensure physics hit
-
-                foreach(var hit in hits)
-                {
-                    var hitEnt = hit.HitEntity;
-
-                    if(hitEnt is IMyCubeGrid || hitEnt is MyEntitySubpart)
-                    {
-                        // check if the hit entity is the one with the interaction or its parent (in case of subparts)
-                        if(hitEnt.EntityId == closestEntity.EntityId || (hitEnt.Parent != null && hitEnt.Parent.EntityId == closestEntity.EntityId))
-                        {
-                            return closestType;
-                        }
-
-                        // TODO remove?
-                        //var grid = (IMyCubeGrid)hitEnt;
-                        //var blockPos = grid.RayCastBlocks(hit.Position - dir * 0.1, to);
-                        //
-                        //if(blockPos.HasValue)
-                        //{
-                        //    var block = grid.GetCubeBlock(blockPos.Value);
-                        //
-                        //    if(block.FatBlock is IMyTerminalBlock)
-                        //    {
-                        //        MyAPIGateway.Utilities.ShowNotification("block=" + block, 16, MyFontEnum.Red); // DEBUG
-                        //        return closestType;
-                        //    }
-                        //}
-
-                        foreach(var c in hitEnt.Hierarchy.Children)
-                        {
-                            if(c.Entity != null && c.Entity.EntityId == closestEntity.EntityId)
-                            {
-                                return closestType;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
         public override void UpdateAfterSimulation()
         {
             try
             {
                 if(!init)
                 {
-                    if(MyAPIGateway.Session == null || MyAPIGateway.Multiplayer == null)
+                    if(MyAPIGateway.Session == null)
                         return;
 
                     Init();
@@ -983,35 +872,13 @@ namespace Digi.Interaction
                 if(++skipPlanets >= SKIP_TICKS_PLANETS)
                 {
                     skipPlanets = 0;
-
                     planets.Clear();
                     MyAPIGateway.Entities.GetEntities(ents, delegate (IMyEntity e)
                                                       {
                                                           var planet = e as MyPlanet;
 
                                                           if(planet != null)
-                                                          {
-                                                              if(!planets.ContainsKey(e.EntityId))
-                                                                  planets.Add(e.EntityId, e as MyPlanet);
-
-                                                              return false;
-                                                          }
-
-                                                          // TODO remove in a future version
-                                                          // resets the new animation system back to true for default character models
-                                                          var character = e as IMyCharacter;
-
-                                                          if(character != null)
-                                                          {
-                                                              var skinned = e as MySkinnedEntity;
-
-                                                              if(character.IsPlayer && skinned != null && !skinned.UseNewAnimationSystem && character.ToString() == "Default_Astronaut")
-                                                              {
-                                                                  skinned.UseNewAnimationSystem = true;
-                                                              }
-
-                                                              return false;
-                                                          }
+                                                              planets.Add(planet);
 
                                                           return false; // no reason to add to the list
                                                       });
@@ -1039,260 +906,229 @@ namespace Digi.Interaction
                     }
                 }
 
+                var newCharacterEntity = MyAPIGateway.Session?.Player?.Character;
+
+                if(newCharacterEntity == null)
+                    return;
+
+                if(characterEntity != newCharacterEntity)
+                {
+                    unsupportedCharacter = false;
+                    characterEntity = newCharacterEntity;
+                    var charSkinned = (MySkinnedEntity)characterEntity;
+                    var subtypeId = ((MyCharacterDefinition)characterEntity.Definition).Id.SubtypeName;
+                    int bone;
+
+                    if(subtypeId != "Default_Astronaut")
+                    {
+                        unsupportedCharacter = true;
+                        Log.Info("WARNING: Custom character models can't be supported by animated interaction mod!");
+                    }
+                    else if(charSkinned.AnimationController.FindBone(BONE_LEFTARM_LCD, out bone) == null || charSkinned.AnimationController.FindBone(BONE_RIGHTHAND_INDEXTIP, out bone) == null)
+                    {
+                        unsupportedCharacter = true;
+                        Log.Info("WARNING: Default character model was changed and has different bones, due to ModAPI limitations the animated interaction mod can't find what those bones are renamed to and the mod simply won't work on this character model.");
+                    }
+                }
+
+                // TODO see what cubes players place?
+
+                if(unsupportedCharacter)
+                    return;
+
+                var inMenu = MyAPIGateway.Gui.IsCursorVisible;
                 var controlled = MyAPIGateway.Session.ControlledObject;
+                var interactedEntity = (controlled is IMyCharacter ? MyAPIGateway.Gui.InteractedEntity as IMyCubeBlock : null);
 
-                if(controlled == null || controlled.Entity == null || (characterEntity != null && characterEntity.Closed))
+                #region button press/holding animations
+                bool selected = false;
+
+                if(!inMenu && !(controlled is MyRemoteControl))
                 {
-                    UpdateCharacterReference(null);
-                }
-                else
-                {
-                    if(controlled is IMyCharacter)
-                    {
-                        UpdateCharacterReference(controlled.Entity);
-                    }
-                    else if(controlled is MyShipController)
-                    {
-                        var shipController = controlled as MyShipController;
-                        UpdateCharacterReference(shipController.Pilot);
-                    }
-                }
+                    var detectorComp = characterEntity.Components.Get<MyCharacterDetectorComponent>();
+                    var useObject = detectorComp.UseObject;
 
-                if(characterEntity != null)
-                {
-                    ulong myId = MyAPIGateway.Multiplayer.MyId;
-                    bool inMenu = MyAPIGateway.Gui.GetCurrentScreen != MyTerminalPageEnum.None; // = MyAPIGateway.Gui.ActiveGamePlayScreen != null;
-
-                    if(!inMenu) // TODO remove when MyAPIGateway.Gui.ActiveGamePlayScreen's NullRefException is fixed
+                    if(useObject != null && useObject.SupportedActions.HasFlag(UseActionEnum.Manipulate))
                     {
-                        try
+                        selected = true;
+
+                        if(useObject.ContinuousUsage)
                         {
-                            inMenu = MyAPIGateway.Gui.ActiveGamePlayScreen != null;
-                        }
-                        catch(Exception)
-                        {
-                            inMenu = false;
-                        }
-                    }
-
-                    var skinned = (characterEntity as MySkinnedEntity);
-                    var intEnt = (MyAPIGateway.Session.ControlledObject is IMyCharacter ? MyAPIGateway.Gui.InteractedEntity as IMyCubeBlock : null);
-
-                    // button press/holding animations
-                    {
-                        bool selected = false;
-
-                        if(!inMenu && !(controlled is MyRemoteControl))
-                        {
-                            var type = GetSelectedAreaName();
-
-                            if(type != null)
+                            if(MyAPIGateway.Input.IsGameControlPressed(MyControlsSpace.USE))
                             {
-                                selected = true;
-                                int index = type.LastIndexOf('.') + 1;
-
-                                if(index > 0 && type.Length > index)
+                                if(!lastHoldingUse)
                                 {
-                                    type = type.Substring(index);
-
-                                    if(useHoldObjects.Contains(type))
-                                    {
-                                        if(MyAPIGateway.Input.IsGameControlPressed(MyControlsSpace.USE))
-                                        {
-                                            if(!lastHoldingUse)
-                                            {
-                                                lastHoldingUse = true;
-                                                TriggerInteraction(skinned, InteractionType.USE_HOLD_ON);
-                                            }
-                                        }
-                                        else if(lastHoldingUse)
-                                        {
-                                            lastHoldingUse = false;
-                                            TriggerInteraction(skinned, InteractionType.USE_HOLD_OFF);
-                                        }
-                                    }
-                                    else if(useObjects.Contains(type))
-                                    {
-                                        long time = DateTime.UtcNow.Ticks;
-
-                                        if(lastInteraction == 0 || lastInteraction <= time)
-                                        {
-                                            if(MyAPIGateway.Input.IsNewGameControlPressed(MyControlsSpace.USE))
-                                            {
-                                                lastInteraction = time + interactionEffect[InteractionType.USE_BUTTON].delayTicks;
-
-                                                TriggerInteraction(skinned, InteractionType.USE_BUTTON);
-                                            }
-                                        }
-                                    }
+                                    lastHoldingUse = true;
+                                    TriggerInteraction(characterEntity, InteractionType.USE_HOLD_ON);
                                 }
                             }
-                        }
-
-                        if(lastHoldingUse && !selected)
-                        {
-                            lastHoldingUse = false;
-                            TriggerInteraction(skinned, InteractionType.USE_HOLD_OFF);
-                        }
-                    }
-
-                    if(inMenu || controlled is MyRemoteControl || MyAPIGateway.Session.CameraController is MyCameraBlock)
-                    {
-                        var page = MyAPIGateway.Gui.GetCurrentScreen;
-
-                        if(!lcdShown)
-                        {
-                            lcdShown = true;
-                            lastPage = page;
-
-                            if(intEnt != null)
+                            else if(lastHoldingUse)
                             {
-                                Vector3? offset = null;
-                                var block = intEnt as MyCubeBlock;
-
-                                if(block != null)
-                                {
-                                    //var pos = Sandbox.Game.Gui.MyHud.SelectedObjectHighlight.InteractiveObject.WorldMatrix.Translation; // not allowed in scripts :(
-                                    //offset = pos - block.WorldMatrix.Translation;
-
-                                    var view = controlled.GetHeadMatrix(false, true);
-                                    var start = view.Translation;
-                                    var box = new MyOrientedBoundingBoxD(block.WorldMatrix);
-                                    box.Center = block.WorldMatrix.Translation + Vector3.TransformNormal(block.BlockDefinition.ModelOffset, block.WorldMatrix);
-                                    box.HalfExtent = block.BlockDefinition.Size * (block.CubeGrid.GridSize / 2) + 0.15f;
-                                    var end = start + view.Forward * 6;
-                                    IHitInfo hitInfo;
-
-                                    if(MyAPIGateway.Physics.CastRay(start, end, out hitInfo))
-                                    {
-                                        var hitPos = hitInfo.Position;
-
-                                        if(box.Contains(ref hitPos))
-                                        {
-                                            offset = Vector3D.TransformNormal(hitPos - block.WorldMatrix.Translation, block.PositionComp.WorldMatrixInvScaled);
-                                        }
-                                    }
-                                }
-
-                                TriggerInteraction(skinned, InteractionType.START_TARGET, intEnt, offset);
-                                startTime = DateTime.UtcNow.Ticks + interactionEffect[InteractionType.START_TARGET].delayTicks;
-                            }
-                            else
-                            {
-                                TriggerInteraction(skinned, InteractionType.START);
-                                startTime = DateTime.UtcNow.Ticks + interactionEffect[InteractionType.START].delayTicks;
+                                lastHoldingUse = false;
+                                TriggerInteraction(characterEntity, InteractionType.USE_HOLD_OFF);
                             }
                         }
                         else
                         {
                             long time = DateTime.UtcNow.Ticks;
 
-                            if(startTime == 0 || startTime <= time)
+                            if(lastInteraction == 0 || lastInteraction <= time)
                             {
-                                startTime = 0;
-
-                                if(inMenu)
+                                if(MyAPIGateway.Input.IsNewGameControlPressed(MyControlsSpace.USE))
                                 {
-                                    if(lastInteraction == 0 || lastInteraction <= time)
-                                    {
-                                        InteractionType type = InteractionType.START;
+                                    lastInteraction = time + interactionEffect[InteractionType.USE_BUTTON].delayTicks;
 
-                                        if(lastInRC)
-                                        {
-                                            lastInRC = false;
-                                            type = InteractionType.RC_OFF;
-                                        }
-                                        else if(lastInCamera)
-                                        {
-                                            lastInCamera = false;
-                                            type = InteractionType.CAMERA_OFF;
-                                        }
-                                        else if(lastPage != page)
-                                        {
-                                            lastPage = page;
-                                            type = InteractionType.TAB;
-                                        }
-                                        else if(MyAPIGateway.Input.IsAnyNewMouseOrJoystickPressed())
-                                        {
-                                            type = InteractionType.CLICK;
-                                        }
-                                        else if(MyAPIGateway.Input.IsAnyKeyPress())
-                                        {
-                                            keys.Clear();
-                                            MyAPIGateway.Input.GetPressedKeys(keys);
-
-                                            if(!KeyListEqual(keys, prevKeys))
-                                            {
-                                                prevKeys = new HashSet<MyKeys>(keys);
-                                                var use = MyAPIGateway.Input.GetGameControl(MyControlsSpace.USE);
-                                                var terminal = MyAPIGateway.Input.GetGameControl(MyControlsSpace.TERMINAL);
-
-                                                foreach(var k in keys)
-                                                {
-                                                    if(k == use.GetKeyboardControl() || k == use.GetSecondKeyboardControl() || k == terminal.GetKeyboardControl() || k == terminal.GetSecondKeyboardControl())
-                                                        continue;
-
-                                                    if(MyAPIGateway.Input.IsKeyValid(k))
-                                                    {
-                                                        type = InteractionType.TYPE;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-
-                                            keys.Clear();
-                                        }
-
-                                        if(type != InteractionType.START)
-                                        {
-                                            lastInteraction = time + interactionEffect[type].delayTicks;
-
-                                            TriggerInteraction(skinned, type, forceStayOnLastFrame: true);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        lastPage = page;
-                                    }
-                                }
-                                else if(controlled is MyRemoteControl)
-                                {
-                                    if(!lastInRC)
-                                    {
-                                        lastInteraction = time + interactionEffect[InteractionType.RC_ON].delayTicks;
-                                        lastInRC = true;
-
-                                        TriggerInteraction(skinned, InteractionType.RC_ON);
-                                    }
-                                }
-                                else if(MyAPIGateway.Session.CameraController is MyCameraBlock)
-                                {
-                                    if(!lastInCamera)
-                                    {
-                                        lastInteraction = time + interactionEffect[InteractionType.RC_ON].delayTicks;
-                                        lastInCamera = true;
-
-                                        TriggerInteraction(skinned, InteractionType.CAMERA_ON);
-                                    }
+                                    TriggerInteraction(characterEntity, InteractionType.USE_BUTTON);
                                 }
                             }
                         }
                     }
-                    else if(lcdShown)
+                }
+
+                if(lastHoldingUse && !selected)
+                {
+                    lastHoldingUse = false;
+                    TriggerInteraction(characterEntity, InteractionType.USE_HOLD_OFF);
+                }
+                #endregion button press/holding animations
+
+                if(inMenu || controlled is MyRemoteControl || MyAPIGateway.Session.CameraController is MyCameraBlock)
+                {
+                    var page = MyAPIGateway.Gui.GetCurrentScreen;
+
+                    if(!lcdShown)
                     {
-                        lcdShown = false;
-                        lastPage = MyTerminalPageEnum.None;
-                        lastInteraction = 0;
-                        lastInCamera = false;
-                        lastInRC = false;
+                        lcdShown = true;
+                        lastPage = page;
 
-                        InteractionType type = InteractionType.END;
+                        if(interactedEntity != null)
+                        {
+                            Vector3? offset = null;
+                            var block = interactedEntity as MyCubeBlock;
+                            var detectorComp = characterEntity.Components.Get<MyCharacterDetectorComponent>();
+                            var useObject = detectorComp.UseObject;
 
-                        if(interactEntity.ContainsKey(characterEntity.EntityId))
-                            type = InteractionType.END_TARGET;
+                            if(block != null && useObject != null)
+                                offset = Vector3D.TransformNormal(useObject.ActivationMatrix.Translation - block.WorldMatrix.Translation, block.PositionComp.WorldMatrixInvScaled);
 
-                        TriggerInteraction(skinned, type);
+                            TriggerInteraction(characterEntity, InteractionType.START_TARGET, interactedEntity, offset);
+                            startTime = DateTime.UtcNow.Ticks + interactionEffect[InteractionType.START_TARGET].delayTicks;
+                        }
+                        else
+                        {
+                            TriggerInteraction(characterEntity, InteractionType.START);
+                            startTime = DateTime.UtcNow.Ticks + interactionEffect[InteractionType.START].delayTicks;
+                        }
                     }
+                    else
+                    {
+                        long time = DateTime.UtcNow.Ticks;
+
+                        if(startTime == 0 || startTime <= time)
+                        {
+                            startTime = 0;
+
+                            if(inMenu)
+                            {
+                                if(lastInteraction == 0 || lastInteraction <= time)
+                                {
+                                    InteractionType type = InteractionType.START;
+
+                                    if(lastInRC)
+                                    {
+                                        lastInRC = false;
+                                        type = InteractionType.RC_OFF;
+                                    }
+                                    else if(lastInCamera)
+                                    {
+                                        lastInCamera = false;
+                                        type = InteractionType.CAMERA_OFF;
+                                    }
+                                    else if(lastPage != page)
+                                    {
+                                        lastPage = page;
+                                        type = InteractionType.TAB;
+                                    }
+                                    else if(MyAPIGateway.Input.IsAnyNewMouseOrJoystickPressed())
+                                    {
+                                        type = InteractionType.CLICK;
+                                    }
+                                    else if(MyAPIGateway.Input.IsAnyKeyPress())
+                                    {
+                                        keys.Clear();
+                                        MyAPIGateway.Input.GetPressedKeys(keys);
+
+                                        if(!KeyListEqual(keys, prevKeys))
+                                        {
+                                            prevKeys = new HashSet<MyKeys>(keys);
+                                            var use = MyAPIGateway.Input.GetGameControl(MyControlsSpace.USE);
+                                            var terminal = MyAPIGateway.Input.GetGameControl(MyControlsSpace.TERMINAL);
+
+                                            foreach(var k in keys)
+                                            {
+                                                if(k == use.GetKeyboardControl() || k == use.GetSecondKeyboardControl() || k == terminal.GetKeyboardControl() || k == terminal.GetSecondKeyboardControl())
+                                                    continue;
+
+                                                if(MyAPIGateway.Input.IsKeyValid(k))
+                                                {
+                                                    type = InteractionType.TYPE;
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        keys.Clear();
+                                    }
+
+                                    if(type != InteractionType.START)
+                                    {
+                                        lastInteraction = time + interactionEffect[type].delayTicks;
+
+                                        TriggerInteraction(characterEntity, type, forceStayOnLastFrame: true);
+                                    }
+                                }
+                                else
+                                {
+                                    lastPage = page;
+                                }
+                            }
+                            else if(controlled is MyRemoteControl)
+                            {
+                                if(!lastInRC)
+                                {
+                                    lastInteraction = time + interactionEffect[InteractionType.RC_ON].delayTicks;
+                                    lastInRC = true;
+
+                                    TriggerInteraction(characterEntity, InteractionType.RC_ON);
+                                }
+                            }
+                            else if(MyAPIGateway.Session.CameraController is MyCameraBlock)
+                            {
+                                if(!lastInCamera)
+                                {
+                                    lastInteraction = time + interactionEffect[InteractionType.RC_ON].delayTicks;
+                                    lastInCamera = true;
+
+                                    TriggerInteraction(characterEntity, InteractionType.CAMERA_ON);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(lcdShown)
+                {
+                    lcdShown = false;
+                    lastPage = MyTerminalPageEnum.None;
+                    lastInteraction = 0;
+                    lastInCamera = false;
+                    lastInRC = false;
+
+                    InteractionType type = InteractionType.END;
+
+                    if(interactEntity.ContainsKey(characterEntity.EntityId))
+                        type = InteractionType.END_TARGET;
+
+                    TriggerInteraction(characterEntity, type);
                 }
             }
             catch(Exception e)
@@ -1317,6 +1153,9 @@ namespace Digi.Interaction
 
         public void PlaySound(IMyEntity ent, string name)
         {
+            if(name == null || settings.interactionSounds <= 0)
+                return;
+
             var emitter = new MyEntity3DSoundEmitter(ent as MyEntity);
             emitter.CustomVolume = settings.interactionSounds;
             emitter.PlaySingleSound(new MySoundPair(name));
@@ -1338,10 +1177,10 @@ namespace Digi.Interaction
         }
     }
 
-    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_GravityGenerator))]
+    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_GravityGenerator), true)]
     public class GravityGeneratorFlat : GravityGeneratorLogic { }
 
-    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_GravityGeneratorSphere))]
+    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_GravityGeneratorSphere), true)]
     public class GravityGeneratorSphere : GravityGeneratorLogic { }
 
     public class GravityGeneratorLogic : MyGameLogicComponent
@@ -1378,11 +1217,6 @@ namespace Digi.Interaction
             {
                 Log.Error(e);
             }
-        }
-
-        public override MyObjectBuilder_EntityBase GetObjectBuilder(bool copy = false)
-        {
-            return Entity.GetObjectBuilder(copy);
         }
     }
 }
