@@ -18,6 +18,7 @@ using VRage.Game.ModAPI;
 using VRage.Input;
 using VRage.ModAPI;
 using VRage.ObjectBuilders;
+using VRage.Utils;
 using VRageMath;
 
 namespace Digi.Interaction
@@ -193,6 +194,7 @@ namespace Digi.Interaction
         private const string BONE_LEFTARM_LCD = "SE_RigLForearm3";
 
         private static readonly Vector4 CABLE_COLOR = new Color(15, 15, 15).ToVector4();
+        private static readonly MyStringId MATERIAL_WEAPONLASER = MyStringId.GetOrCompute("WeaponLaser");
 
         private readonly Dictionary<InteractionType, InteractionEffect> interactionEffect = new Dictionary<InteractionType, InteractionEffect>()
         {
@@ -845,7 +847,7 @@ namespace Digi.Interaction
                         if(len > 0.001f)
                         {
                             float width = (float)settings.cableWidth / 2;
-                            MyTransparentGeometry.AddLineBillboard("WeaponLaser", CABLE_COLOR, start, dir, len, width);
+                            MyTransparentGeometry.AddLineBillboard(MATERIAL_WEAPONLASER, CABLE_COLOR, start, dir, len, width);
                         }
                     }
                 }
@@ -1005,11 +1007,13 @@ namespace Digi.Interaction
                         {
                             Vector3? offset = null;
                             var block = interactedEntity as MyCubeBlock;
-                            var detectorComp = characterEntity.Components.Get<MyCharacterDetectorComponent>();
-                            var useObject = detectorComp.UseObject;
+                            var useObject = characterEntity.Components.Get<MyCharacterDetectorComponent>()?.UseObject;
 
                             if(block != null && useObject != null)
-                                offset = Vector3D.TransformNormal(useObject.ActivationMatrix.Translation - block.WorldMatrix.Translation, block.PositionComp.WorldMatrixInvScaled);
+                            {
+                                var blockCenter = block.WorldMatrix.Translation - Vector3D.TransformNormal(block.BlockDefinition.ModelOffset, block.WorldMatrix);
+                                offset = Vector3D.TransformNormal(useObject.ActivationMatrix.Translation - blockCenter, block.PositionComp.WorldMatrixInvScaled);
+                            }
 
                             TriggerInteraction(characterEntity, InteractionType.START_TARGET, interactedEntity, offset);
                             startTime = DateTime.UtcNow.Ticks + interactionEffect[InteractionType.START_TARGET].delayTicks;
