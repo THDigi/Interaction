@@ -825,18 +825,21 @@ namespace Digi.Interaction
                         else
                         {
                             e = new MyEntity();
-                            e.Init(null, pathToCable, targetEnt as MyEntity, null, null);
+                            e.Save = false;
+                            e.SyncFlag = false;
+                            e.IsPreview = true;
+                            e.Init(null, pathToCable, null, null, null);
                             e.Flags = EntityFlags.Visible | EntityFlags.NeedsDraw | EntityFlags.NeedsDrawFromParent | EntityFlags.InvalidateOnMove;
-                            e.OnAddedToScene(null);
+                            MyEntities.Add(e, true);
                             r.ents.Add(e);
                         }
 
                         Vector3 dir = (start - end);
                         double width = settings.cableWidth * 10;
                         var scale = new Vector3D(width, width, dir.Length() * 10);
-                        var matrix = MatrixD.CreateWorld((start + end) / 2, dir, Vector3.Up) * targetEnt.WorldMatrixInvScaled;
+                        var matrix = MatrixD.CreateWorld((start + end) / 2, dir, Vector3.Up);
                         MatrixD.Rescale(ref matrix, ref scale);
-                        e.PositionComp.SetLocalMatrix(matrix);
+                        e.SetWorldMatrix(matrix);
                         modelIndex++;
                     }
                     else
