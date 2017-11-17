@@ -839,7 +839,7 @@ namespace Digi.Interaction
                         var scale = new Vector3D(width, width, dir.Length() * 10);
                         var matrix = MatrixD.CreateWorld((start + end) / 2, dir, Vector3.Up);
                         MatrixD.Rescale(ref matrix, ref scale);
-                        e.SetWorldMatrix(matrix);
+                        e.WorldMatrix = matrix;
                         modelIndex++;
                     }
                     else
