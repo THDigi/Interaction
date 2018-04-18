@@ -8,7 +8,7 @@
         <Mode>Replace</Mode>
         <StateMachine>InteractMod_SM</StateMachine>
         <InitialSMNode>Nothing</InitialSMNode>
-        <BoneMask>SE_RigL_Index_1 SE_RigL_Index_2 SE_RigL_Index_3 SE_RigL_Index_3_end SE_RigL_Little_1 SE_RigL_Little_2 SE_RigL_Little_3 SE_RigL_Little_3_end SE_RigL_Middle_1 SE_RigL_Middle_2 SE_RigL_Middle_3 SE_RigL_Middle_3_end SE_RigL_Ring_1 SE_RigL_Ring_2 SE_RigL_Ring_3 SE_RigL_Ring_3_end SE_RigL_Thumb_1 SE_RigL_Thumb_2 SE_RigL_Thumb_3 SE_RigL_Thumb_3_end SE_RigL_Weapon_pin SE_RigL_Weapon_pin_end SE_RigLForearm1 SE_RigLForearm2 SE_RigLForearm3 SE_RigLPalm SE_RigLUpperarm SE_RigNeck SE_RigR_Index_1 SE_RigR_Index_2 SE_RigR_Index_3 SE_RigR_Index_3_end SE_RigR_Little_1 SE_RigR_Little_2 SE_RigR_Little_3 SE_RigR_Little_3_end SE_RigR_Middle_1 SE_RigR_Middle_2 SE_RigR_Middle_3 SE_RigR_Middle_3_end SE_RigR_Ring_1 SE_RigR_Ring_2 SE_RigR_Ring_3 SE_RigR_Ring_3_end SE_RigR_Thumb_1 SE_RigR_Thumb_2 SE_RigR_Thumb_3 SE_RigR_Thumb_3_end SE_RigR_Weapon_pin SE_RigR_Weapon_pin_end SE_RigRForearm1 SE_RigRForearm2 SE_RigRForearm3 SE_RigRibcage SE_RigRibcageBone001 SE_RigRibcageBone001_end SE_RigRPalm SE_RigRUpperarm SE_RigSpine1 SE_RigSpine2 SE_RigSpine3 SE_RigSpine4</BoneMask>
+        <BoneMask>SE_RigL_Index_1 SE_RigL_Index_2 SE_RigL_Index_3 SE_RigL_Index_3_end SE_RigL_Little_1 SE_RigL_Little_2 SE_RigL_Little_3 SE_RigL_Little_3_end SE_RigL_Middle_1 SE_RigL_Middle_2 SE_RigL_Middle_3 SE_RigL_Middle_3_end SE_RigL_Ring_1 SE_RigL_Ring_2 SE_RigL_Ring_3 SE_RigL_Ring_3_end SE_RigL_Thumb_1 SE_RigL_Thumb_2 SE_RigL_Thumb_3 SE_RigL_Thumb_3_end SE_RigL_Weapon_pin SE_RigL_Weapon_pin_end SE_RigLCollarbone SE_RigLForearm1 SE_RigLForearm2 SE_RigLForearm3 SE_RigLPalm SE_RigLUpperarm SE_RigNeck SE_RigR_Index_1 SE_RigR_Index_2 SE_RigR_Index_3 SE_RigR_Index_3_end SE_RigR_Little_1 SE_RigR_Little_2 SE_RigR_Little_3 SE_RigR_Little_3_end SE_RigR_Middle_1 SE_RigR_Middle_2 SE_RigR_Middle_3 SE_RigR_Middle_3_end SE_RigR_Ring_1 SE_RigR_Ring_2 SE_RigR_Ring_3 SE_RigR_Ring_3_end SE_RigR_Thumb_1 SE_RigR_Thumb_2 SE_RigR_Thumb_3 SE_RigR_Thumb_3_end SE_RigR_Weapon_pin SE_RigR_Weapon_pin_end SE_RigRCollarbone SE_RigRForearm1 SE_RigRForearm2 SE_RigRForearm3 SE_RigRPalm SE_RigRUpperarm</BoneMask>
       </Layer>
     </Layers>
     <StateMachines>
@@ -33,10 +33,36 @@
               </Child>
             </AnimationTree>
             <EdPos>
-              <X>-761</X>
-              <Y>-403</Y>
+              <X>-954</X>
+              <Y>-241</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables>
+              <Variable>
+                <Name>rd_weight_SE_RigRForearm1</Name>
+                <Value>0.2</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRUpperarm</Name>
+                <Value>0.2</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRPalm</Name>
+                <Value>0.2</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLForearm1</Name>
+                <Value>0.2</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLUpperarm</Name>
+                <Value>0.2</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLPalm</Name>
+                <Value>0.2</Value>
+              </Variable>
+            </Variables>
           </Node>
           <Node>
             <Name>Start</Name>
@@ -58,10 +84,36 @@
               </Child>
             </AnimationTree>
             <EdPos>
-              <X>-658</X>
+              <X>-659</X>
               <Y>-201</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables>
+              <Variable>
+                <Name>rd_weight_SE_RigRForearm1</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRUpperarm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRPalm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLForearm1</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLUpperarm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLPalm</Name>
+                <Value>0</Value>
+              </Variable>
+            </Variables>
           </Node>
           <Node>
             <Name>StartTarget</Name>
@@ -87,6 +139,32 @@
               <Y>-264</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables>
+              <Variable>
+                <Name>rd_weight_SE_RigRForearm1</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRUpperarm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRPalm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLForearm1</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLUpperarm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLPalm</Name>
+                <Value>0</Value>
+              </Variable>
+            </Variables>
           </Node>
           <Node>
             <Name>EndTarget</Name>
@@ -112,6 +190,7 @@
               <Y>-388</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables />
           </Node>
           <Node>
             <Name>State1</Name>
@@ -120,6 +199,7 @@
               <Y>-334</Y>
             </EdPos>
             <Type>Any</Type>
+            <Variables />
           </Node>
           <Node>
             <Name>Click</Name>
@@ -145,6 +225,7 @@
               <Y>-418</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables />
           </Node>
           <Node>
             <Name>End</Name>
@@ -170,6 +251,7 @@
               <Y>-326</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables />
           </Node>
           <Node>
             <Name>Type</Name>
@@ -194,6 +276,7 @@
               <Y>-363</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables />
           </Node>
           <Node>
             <Name>Tab</Name>
@@ -219,6 +302,7 @@
               <Y>-307</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables />
           </Node>
           <Node>
             <Name>Use</Name>
@@ -244,6 +328,32 @@
               <Y>-137</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables>
+              <Variable>
+                <Name>rd_weight_SE_RigRForearm1</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRUpperarm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRPalm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLForearm1</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLUpperarm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLPalm</Name>
+                <Value>0</Value>
+              </Variable>
+            </Variables>
           </Node>
           <Node>
             <Name>UseOn</Name>
@@ -269,6 +379,32 @@
               <Y>-74</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables>
+              <Variable>
+                <Name>rd_weight_SE_RigRForearm1</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRUpperarm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRPalm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLForearm1</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLUpperarm</Name>
+                <Value>0</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLPalm</Name>
+                <Value>0</Value>
+              </Variable>
+            </Variables>
           </Node>
           <Node>
             <Name>UseOff</Name>
@@ -294,6 +430,32 @@
               <Y>-10</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables>
+              <Variable>
+                <Name>rd_weight_SE_RigRForearm1</Name>
+                <Value>0.2</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRUpperarm</Name>
+                <Value>0.2</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigRPalm</Name>
+                <Value>0.2</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLForearm1</Name>
+                <Value>0.2</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLUpperarm</Name>
+                <Value>0.2</Value>
+              </Variable>
+              <Variable>
+                <Name>rd_weight_SE_RigLPalm</Name>
+                <Value>0.2</Value>
+              </Variable>
+            </Variables>
           </Node>
           <Node>
             <Name>RconOn</Name>
@@ -319,6 +481,7 @@
               <Y>-246</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables />
           </Node>
           <Node>
             <Name>RconOff</Name>
@@ -344,6 +507,7 @@
               <Y>-188</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables />
           </Node>
           <Node>
             <Name>CameraOn</Name>
@@ -369,6 +533,7 @@
               <Y>-127</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables />
           </Node>
           <Node>
             <Name>CameraOff</Name>
@@ -379,8 +544,8 @@
               </EdPos>
               <Child xsi:type="MyObjectBuilder_AnimationTreeNodeTrack">
                 <EdPos>
-                  <X>208</X>
-                  <Y>1</Y>
+                  <X>216</X>
+                  <Y>16</Y>
                 </EdPos>
                 <PathToModel>Models\Animations\InteractionCameraOff.mwm</PathToModel>
                 <AnimationName>AnimStack::Scene</AnimationName>
@@ -394,10 +559,11 @@
               <Y>-66</Y>
             </EdPos>
             <Type>Normal</Type>
+            <Variables />
           </Node>
         </Nodes>
         <Transitions>
-          <Transition From="EndTarget" To="Nothing" TimeInSec="0.3" Sync="Restart">
+          <Transition From="EndTarget" To="Nothing" TimeInSec="0.3" Sync="Restart" Curve="Smooth">
             <Conditions>
               <Conjunction>
                 <Condition Lhs="@animationfinished" Op="GreaterOrEqual" Rhs="1" />
@@ -405,37 +571,37 @@
             </Conditions>
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionStartTarget" From="State1" To="StartTarget" TimeInSec="0.2" Sync="Restart">
+          <Transition Name="InteractionStartTarget" From="State1" To="StartTarget" TimeInSec="0.2" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionStart" From="State1" To="Start" TimeInSec="0.2" Sync="Restart">
+          <Transition Name="InteractionStart" From="State1" To="Start" TimeInSec="0.2" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionEndTarget" From="State1" To="EndTarget" TimeInSec="0.1" Sync="Restart">
+          <Transition Name="InteractionEndTarget" From="State1" To="EndTarget" TimeInSec="0.1" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionEnd" From="State1" To="End" TimeInSec="0.1" Sync="Restart">
+          <Transition Name="InteractionEnd" From="State1" To="End" TimeInSec="0.1" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition From="End" To="Nothing" TimeInSec="0.3" Sync="Restart">
+          <Transition From="End" To="Nothing" TimeInSec="0.3" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionClick" From="State1" To="Click" TimeInSec="0.1" Sync="Restart">
+          <Transition Name="InteractionClick" From="State1" To="Click" TimeInSec="0.1" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionType" From="State1" To="Type" TimeInSec="0.1" Sync="Restart">
+          <Transition Name="InteractionType" From="State1" To="Type" TimeInSec="0.1" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionTab" From="State1" To="Tab" TimeInSec="0.1" Sync="Restart">
+          <Transition Name="InteractionTab" From="State1" To="Tab" TimeInSec="0.1" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionUseButton" From="State1" To="Use" TimeInSec="0.2" Sync="Restart">
+          <Transition Name="InteractionUseButton" From="State1" To="Use" TimeInSec="0.2" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionUseButtonOff" From="State1" To="UseOff" TimeInSec="0.2" Sync="Restart">
+          <Transition Name="InteractionUseButtonOff" From="State1" To="UseOff" TimeInSec="0.2" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition From="Use" To="Nothing" TimeInSec="0.3" Sync="Restart">
+          <Transition From="Use" To="Nothing" TimeInSec="0.3" Sync="Restart" Curve="Smooth">
             <Conditions>
               <Conjunction>
                 <Condition Lhs="@animationfinished" Op="GreaterOrEqual" Rhs="1" />
@@ -443,7 +609,7 @@
             </Conditions>
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition From="UseOff" To="Nothing" TimeInSec="0.3" Sync="Restart">
+          <Transition From="UseOff" To="Nothing" TimeInSec="0.3" Sync="Restart" Curve="Smooth">
             <Conditions>
               <Conjunction>
                 <Condition Lhs="@animationfinished" Op="GreaterOrEqual" Rhs="1" />
@@ -451,19 +617,19 @@
             </Conditions>
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionRCOff" From="State1" To="RconOff" TimeInSec="0.1" Sync="Restart">
+          <Transition Name="InteractionRCOff" From="State1" To="RconOff" TimeInSec="0.1" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionUseButtonOn" From="State1" To="UseOn" TimeInSec="0.2" Sync="Restart">
+          <Transition Name="InteractionUseButtonOn" From="State1" To="UseOn" TimeInSec="0.2" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionCameraOn" From="State1" To="CameraOn" TimeInSec="0.1" Sync="Restart">
+          <Transition Name="InteractionCameraOn" From="State1" To="CameraOn" TimeInSec="0.1" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionCameraOff" From="State1" To="CameraOff" TimeInSec="0.1" Sync="Restart">
+          <Transition Name="InteractionCameraOff" From="State1" To="CameraOff" TimeInSec="0.1" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
-          <Transition Name="InteractionRCOn" From="State1" To="RconOn" TimeInSec="0.1" Sync="Restart">
+          <Transition Name="InteractionRCOn" From="State1" To="RconOn" TimeInSec="0.1" Sync="Restart" Curve="Smooth">
             <Priority xsi:nil="true" />
           </Transition>
         </Transitions>

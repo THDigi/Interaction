@@ -936,8 +936,6 @@ namespace Digi.Interaction
                     }
                 }
 
-                // TODO see what cubes players place?
-
                 if(unsupportedCharacter)
                     return;
 
@@ -975,17 +973,18 @@ namespace Digi.Interaction
                         }
                         else
                         {
-                            long time = DateTime.UtcNow.Ticks;
-
-                            if(lastInteraction == 0 || lastInteraction <= time)
-                            {
-                                if(MyAPIGateway.Input.IsNewGameControlPressed(MyControlsSpace.USE))
-                                {
-                                    lastInteraction = time + interactionEffect[InteractionType.USE_BUTTON].delayTicks;
-
-                                    TriggerInteraction(characterEntity, InteractionType.USE_BUTTON);
-                                }
-                            }
+                            // HACK disabled for now
+                            //long time = DateTime.UtcNow.Ticks;
+                            //
+                            //if(lastInteraction == 0 || lastInteraction <= time)
+                            //{
+                            //    if(MyAPIGateway.Input.IsNewGameControlPressed(MyControlsSpace.USE))
+                            //    {
+                            //        lastInteraction = time + interactionEffect[InteractionType.USE_BUTTON].delayTicks;
+                            //
+                            //        TriggerInteraction(characterEntity, InteractionType.USE_BUTTON);
+                            //    }
+                            //}
                         }
                     }
                 }
