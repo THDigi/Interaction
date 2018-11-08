@@ -322,12 +322,20 @@ namespace Digi.Interaction
             "MyUseObjectMedicalRoom",
         };
 
-        private string GetModPath(ulong workshopId, ulong workshopIdDev, string localFolder, string localFolderDev)
+        private static string GetModPath(ulong workshopId, ulong workshopIdDev, string localFolder, string localFolderDev)
         {
             foreach(var mod in MyAPIGateway.Session.Mods)
             {
-                if(mod.PublishedFileId == 0 ? (mod.Name == localFolder || mod.Name == localFolderDev) : (mod.PublishedFileId == workshopId || mod.PublishedFileId == workshopIdDev))
+                var isLocalMod = (mod.PublishedFileId == 0);
+
+                if(isLocalMod && (mod.Name == localFolder || mod.Name == localFolderDev))
+                {
                     return Path.Combine(MyAPIGateway.Utilities.GamePaths.ModsPath, mod.Name);
+                }
+                else if(!isLocalMod && (mod.PublishedFileId == workshopId || mod.PublishedFileId == workshopIdDev))
+                {
+                    return MyAPIGateway.Utilities.GamePaths.ContentPath.Replace(@"common\SpaceEngineers\Content", @"workshop\content\244850\" + mod.PublishedFileId);
+                }
             }
 
             return null;
@@ -829,7 +837,7 @@ namespace Digi.Interaction
                             e.SyncFlag = false;
                             e.IsPreview = true;
                             e.Init(null, pathToCable, null, null, null);
-                            e.Flags = EntityFlags.Visible | EntityFlags.NeedsDraw | EntityFlags.NeedsDrawFromParent | EntityFlags.InvalidateOnMove;
+                            e.Flags = EntityFlags.Visible | EntityFlags.UpdateRender | EntityFlags.NeedsDraw | EntityFlags.NeedsDrawFromParent | EntityFlags.InvalidateOnMove;
                             MyEntities.Add(e, true);
                             r.ents.Add(e);
                         }
