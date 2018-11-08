@@ -5,7 +5,6 @@ using System.Text;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;
 using Sandbox.Game;
-using Sandbox.Game.Components;
 using Sandbox.Game.Entities;
 using Sandbox.Game.Entities.Character.Components;
 using Sandbox.ModAPI;
@@ -26,15 +25,14 @@ namespace Digi.Interaction
     [MySessionComponentDescriptor(MyUpdateOrder.AfterSimulation)]
     public class InteractionMod : MySessionComponentBase
     {
-        private const int WORKSHOP_ID = 652337022;
-        private const int WORKSHOP_ID_DEV = 650441224;
         private const string LOCAL_FOLDER = "Interaction";
         private const string LOCAL_FOLDER_DEV = "Interaction.dev";
 
         public override void LoadData()
         {
-            Log.SetUp("Animated Interaction", WORKSHOP_ID, "Interaction");
             instance = this;
+            Log.ModName = "Animated Interaction";
+            Log.AutoClose = false;
         }
 
         public enum InteractionType
@@ -322,19 +320,17 @@ namespace Digi.Interaction
             "MyUseObjectMedicalRoom",
         };
 
-        private static string GetModPath(ulong workshopId, ulong workshopIdDev, string localFolder, string localFolderDev)
+        private static string GetModPath(ulong workshopId, string localFolder, string localFolderDev)
         {
             foreach(var mod in MyAPIGateway.Session.Mods)
             {
-                var isLocalMod = (mod.PublishedFileId == 0);
-
-                if(isLocalMod && (mod.Name == localFolder || mod.Name == localFolderDev))
+                if(mod.PublishedFileId == workshopId)
+                {
+                    return MyAPIGateway.Utilities.GamePaths.ContentPath.Replace(@"common\SpaceEngineers\Content", @"workshop\content\244850\" + workshopId);
+                }
+                else if(mod.PublishedFileId == 0 && (mod.Name == localFolder || mod.Name == localFolderDev))
                 {
                     return Path.Combine(MyAPIGateway.Utilities.GamePaths.ModsPath, mod.Name);
-                }
-                else if(!isLocalMod && (mod.PublishedFileId == workshopId || mod.PublishedFileId == workshopIdDev))
-                {
-                    return MyAPIGateway.Utilities.GamePaths.ContentPath.Replace(@"common\SpaceEngineers\Content", @"workshop\content\244850\" + mod.PublishedFileId);
                 }
             }
 
@@ -346,11 +342,9 @@ namespace Digi.Interaction
             init = true;
             isThisHostDedicated = (MyAPIGateway.Multiplayer.IsServer && MyAPIGateway.Utilities.IsDedicated);
 
-            Log.Init();
-
             if(!isThisHostDedicated)
             {
-                pathToMod = GetModPath(WORKSHOP_ID, WORKSHOP_ID_DEV, LOCAL_FOLDER, LOCAL_FOLDER_DEV);
+                pathToMod = GetModPath(Log.WorkshopId, LOCAL_FOLDER, LOCAL_FOLDER_DEV);
 
                 if(pathToMod == null)
                     Log.Error("Can't find this mod in the mod list!");
@@ -417,9 +411,9 @@ namespace Digi.Interaction
                     if(msg.Equals("reload"))
                     {
                         if(settings.Load())
-                            MyAPIGateway.Utilities.ShowMessage(Log.modName, "Reloaded and re-saved config.");
+                            MyAPIGateway.Utilities.ShowMessage(Log.ModName, "Reloaded and re-saved config.");
                         else
-                            MyAPIGateway.Utilities.ShowMessage(Log.modName, "Config created with the current settings.");
+                            MyAPIGateway.Utilities.ShowMessage(Log.ModName, "Config created with the current settings.");
 
                         // reset cables
                         foreach(var i in interactEntity.Values)
@@ -431,7 +425,7 @@ namespace Digi.Interaction
                         return;
                     }
 
-                    MyAPIGateway.Utilities.ShowMessage(Log.modName, "Available commands:");
+                    MyAPIGateway.Utilities.ShowMessage(Log.ModName, "Available commands:");
                     MyAPIGateway.Utilities.ShowMessage("/interaction reload ", "reloads the config file.");
                 }
             }
@@ -1178,12 +1172,12 @@ namespace Digi.Interaction
         public static Vector3D GetCurvePointAt(ref Vector3D p0, ref Vector3D p1, ref Vector3D p2, ref Vector3D p3, double t)
         {
             return new Vector3D(
-                cubeBezier(p0.X, p1.X, p2.X, p3.X, t),
-                cubeBezier(p0.Y, p1.Y, p2.Y, p3.Y, t),
-                cubeBezier(p0.Z, p1.Z, p2.Z, p3.Z, t));
+                CubeBezier(p0.X, p1.X, p2.X, p3.X, t),
+                CubeBezier(p0.Y, p1.Y, p2.Y, p3.Y, t),
+                CubeBezier(p0.Z, p1.Z, p2.Z, p3.Z, t));
         }
 
-        private static double cubeBezier(double p0, double p1, double p2, double p3, double t)
+        private static double CubeBezier(double p0, double p1, double p2, double p3, double t)
         {
             double rt = 1.0 - t;
             double rtt = rt * t;
