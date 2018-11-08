@@ -9,6 +9,7 @@ using Sandbox.Game.Entities;
 using Sandbox.Game.Entities.Character.Components;
 using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
+using VRage;
 using VRage.Game;
 using VRage.Game.Components;
 using VRage.Game.Entity;
@@ -25,6 +26,12 @@ namespace Digi.Interaction
     [MySessionComponentDescriptor(MyUpdateOrder.AfterSimulation)]
     public class InteractionMod : MySessionComponentBase
     {
+        private readonly List<string> SUPPORTED_CHARACTER_SUBTYPES = new List<string>()
+        {
+            "Default_Astronaut",
+            "Default_Astronaut_Female"
+        };
+
         private const string LOCAL_FOLDER = "Interaction";
         private const string LOCAL_FOLDER_DEV = "Interaction.dev";
 
@@ -144,6 +151,7 @@ namespace Digi.Interaction
         public Settings settings = null;
 
         private IMyCharacter characterEntity = null;
+        private MyDefinitionId characterDefId;
         private bool unsupportedCharacter = false;
 
         private bool lcdShown = false;
@@ -913,20 +921,24 @@ namespace Digi.Interaction
                     }
                 }
 
-                var newCharacterEntity = MyAPIGateway.Session?.Player?.Character;
+                var character = MyAPIGateway.Session?.Player?.Character;
 
-                if(newCharacterEntity == null)
+                if(character == null)
+                {
+                    characterEntity = null;
+                    unsupportedCharacter = true;
                     return;
+                }
 
-                if(characterEntity != newCharacterEntity)
+                if(!object.ReferenceEquals(characterEntity, character) || characterDefId != character.Definition.Id)
                 {
                     unsupportedCharacter = false;
-                    characterEntity = newCharacterEntity;
+                    characterEntity = character;
+                    characterDefId = characterEntity.Definition.Id;
                     var charSkinned = (MySkinnedEntity)characterEntity;
-                    var subtypeId = ((MyCharacterDefinition)characterEntity.Definition).Id.SubtypeName;
                     int bone;
 
-                    if(subtypeId != "Default_Astronaut" && subtypeId != "Default_Astronaut_Female")
+                    if(!SUPPORTED_CHARACTER_SUBTYPES.Contains(characterDefId.SubtypeName))
                     {
                         unsupportedCharacter = true;
                         Log.Info("WARNING: Custom character models can't be supported by animated interaction mod!");
@@ -935,6 +947,12 @@ namespace Digi.Interaction
                     {
                         unsupportedCharacter = true;
                         Log.Info("WARNING: Default character model was changed and has different bones, due to ModAPI limitations the animated interaction mod can't find what those bones are renamed to and the mod simply won't work on this character model.");
+                    }
+
+                    if(unsupportedCharacter)
+                    {
+                        var charDef = (MyCharacterDefinition)characterEntity.Definition;
+                        MyAPIGateway.Utilities.ShowMessage("NOTE", $"Character '{MyTexts.GetString(charDef.Name)}' ({charDef.Id.SubtypeName}) is not supported by {Log.ModName} mod.");
                     }
                 }
 
