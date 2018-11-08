@@ -924,7 +924,7 @@ namespace Digi.Interaction
                     var subtypeId = ((MyCharacterDefinition)characterEntity.Definition).Id.SubtypeName;
                     int bone;
 
-                    if(subtypeId != "Default_Astronaut")
+                    if(subtypeId != "Default_Astronaut" && subtypeId != "Default_Astronaut_Female")
                     {
                         unsupportedCharacter = true;
                         Log.Info("WARNING: Custom character models can't be supported by animated interaction mod!");
